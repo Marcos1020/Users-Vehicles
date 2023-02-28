@@ -1,0 +1,20 @@
+version: '3'
+volumes:
+  mysql_data:
+    driver: local
+services:
+
+  #MYSQL
+  mysql:
+    image: mysql:8.0.19
+    command: --lower_case_table_names=1
+    container_name: Users_vehicle
+    ports:
+      - "3346:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: users.vehicle
+      MYSQL_USER: users.vehicle
+      MYSQL_PASSWORD: root
