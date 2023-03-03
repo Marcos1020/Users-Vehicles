@@ -57,7 +57,7 @@ public class UserController{
         return ResponseEntity.status(HttpStatus.OK).body(Constants.USUARIO_DELETADO);
     }
 
-    @GetMapping(BasePath.BASE_PATH_LOGIN_USER)
+    @PostMapping(BasePath.BASE_PATH_LOGIN_USER)
     public ResponseEntity<String> UserLogin(
             @RequestBody LoginRequest loginRequest) throws PreconditionFailedException {
         this.userService.userLogin(loginRequest);

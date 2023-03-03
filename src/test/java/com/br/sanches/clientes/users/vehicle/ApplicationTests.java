@@ -1,5 +1,6 @@
 package com.br.sanches.clientes.users.vehicle;
 
+import com.br.sanches.clientes.users.vehicle.controller.request.LoginRequest;
 import com.br.sanches.clientes.users.vehicle.controller.request.UserRequest;
 import com.br.sanches.clientes.users.vehicle.controller.response.UserResponse;
 import com.br.sanches.clientes.users.vehicle.entity.EntityCars;
@@ -7,6 +8,7 @@ import com.br.sanches.clientes.users.vehicle.entity.UserEntity;
 import com.br.sanches.clientes.users.vehicle.exception.PreconditionFailedException;
 import com.br.sanches.clientes.users.vehicle.repository.CarRepository;
 import com.br.sanches.clientes.users.vehicle.repository.UserRepository;
+import com.br.sanches.clientes.users.vehicle.utils.Constants;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +18,13 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.testng.AssertJUnit.assertFalse;
-import static org.testng.AssertJUnit.assertNotNull;
+import static org.testng.AssertJUnit.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -35,13 +37,15 @@ class ApplicationTests {
     private CarRepository carRepository;
 
     private ConvertionsTest convertionsTest;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    ApplicationTests(TestRestTemplate restTemplate, UserRepository userRepository, CarRepository carRepository, ConvertionsTest convertionsTest) {
+    ApplicationTests(TestRestTemplate restTemplate, UserRepository userRepository, CarRepository carRepository, ConvertionsTest convertionsTest, PasswordEncoder passwordEncoder) {
         this.restTemplate = restTemplate;
         this.userRepository = userRepository;
         this.carRepository = carRepository;
         this.convertionsTest = convertionsTest;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Test
@@ -120,7 +124,7 @@ class ApplicationTests {
     }
 
     @Test
-    public void sholdDeleteAUserAndVehicleByItsId() {
+    public void sholdDeleteAUserAndVehicleByItsId()throws PreconditionFailedException {
 
         UserEntity userEntity = userRepository.findById(1L).orElse(null);
         assertNotNull(userEntity);
@@ -142,6 +146,23 @@ class ApplicationTests {
 
         assertFalse(userRepository.findById(userEntity.getIdUser()).isPresent());
         assertFalse(carRepository.findById(entityCars.getIdCar()).isPresent());
+    }
 
+    @Test
+    public void testUserLogin() throws PreconditionFailedException {
+
+        Optional<UserEntity> user = userRepository.findByUserName("Markin_Dev10");
+
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setUserName(user.get().getUserName());
+        loginRequest.setPassword("Br12-Je11-Rb87");
+
+        ResponseEntity<String> response = restTemplate.postForEntity(
+                "http://localhost:9060/clientes/users/login-user",
+                loginRequest,
+                String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(Constants.LOGIN_SUCCESSES);
     }
 }
