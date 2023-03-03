@@ -14,6 +14,5 @@ public class Constants {
     public final String USER_NOT_FOUND = "Usuário não encontrado na base de dados";
     public final String INAVALID_PASSWORD = "Senha incorreta";
     public final String INVALID_LICENSE_PLATE = "Placa já cadastrada";
-
-
+    public static final String AUTENTICATION_FAILED = "Falha ao autenticar usuario";
 }
