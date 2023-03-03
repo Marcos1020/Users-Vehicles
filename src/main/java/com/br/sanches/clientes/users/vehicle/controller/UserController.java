@@ -54,7 +54,7 @@ public class UserController{
     public ResponseEntity<String> deletUser(
             @PathVariable("id")Long idUser)throws PreconditionFailedException{
         this.userService.delete(idUser);
-        return ResponseEntity.status(HttpStatus.OK).body(Constants.USUARIO_DELETADO);
+        return ResponseEntity.status(HttpStatus.OK).body(Constants.USER_DELECTED);
     }
 
     @PostMapping(BasePath.BASE_PATH_LOGIN_USER)

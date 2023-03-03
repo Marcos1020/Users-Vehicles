@@ -58,7 +58,9 @@ class ApplicationTests {
         UserRequest userRequest = convertionsTest.instantiatingANewUserAndVehicleForTheTest();
 
         ResponseEntity<UserResponse> response = restTemplate.postForEntity(
-                "http://localhost:9060/clientes/users/register", userRequest, UserResponse.class);
+                "http://localhost:9060/clientes/users/register",
+                userRequest,
+                UserResponse.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
@@ -143,6 +145,7 @@ class ApplicationTests {
                 userEntity.getIdUser()
         );
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(Constants.USER_DELECTED);
 
         assertFalse(userRepository.findById(userEntity.getIdUser()).isPresent());
         assertFalse(carRepository.findById(entityCars.getIdCar()).isPresent());
