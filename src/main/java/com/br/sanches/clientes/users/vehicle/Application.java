@@ -14,10 +14,4 @@ public class Application {
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
-	@Bean
-	@Primary
-	public PasswordEncoder getPassWordEnconder(){
-		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		return encoder;
-	}
 }

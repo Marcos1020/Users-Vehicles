@@ -39,7 +39,7 @@ public class UserService {
         this.encoder = encoder;
     }
 
-    public UserResponse newUser(UserRequest userRequest )throws ObjectAlreadyExists {
+    public UserResponse newUser(UserRequest userRequest) throws ObjectAlreadyExists {
 
         log.info(Constants.REGISTER_NEW_USER);
 
@@ -131,11 +131,10 @@ public class UserService {
         if (Objects.isNull(userEntity)) {
             log.info(Constants.USER_NOT_FOUND);
             throw new PreconditionFailedException(Constants.USER_NOT_FOUND);
-        } else {
-            if (!encoder.matches(loginRequest.getPassword(), userEntity.get().getPassword())) {
-                log.info(Constants.INAVALID_PASSWORD);
-                throw new PreconditionFailedException(Constants.INAVALID_PASSWORD);
-            }
+
+        } else if (!encoder.matches(loginRequest.getPassword(), userEntity.get().getPassword())) {
+            log.info(Constants.INAVALID_PASSWORD);
+            throw new PreconditionFailedException(Constants.INAVALID_PASSWORD);
         }
     }
 }

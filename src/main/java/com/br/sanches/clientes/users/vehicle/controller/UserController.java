@@ -1,7 +1,6 @@
 package com.br.sanches.clientes.users.vehicle.controller;
 
 import com.br.sanches.clientes.users.vehicle.basePath.BasePath;
-import com.br.sanches.clientes.users.vehicle.controller.request.CarRequest;
 import com.br.sanches.clientes.users.vehicle.controller.request.LoginRequest;
 import com.br.sanches.clientes.users.vehicle.controller.request.UserRequest;
 import com.br.sanches.clientes.users.vehicle.controller.response.UserResponse;
@@ -12,7 +11,6 @@ import com.br.sanches.clientes.users.vehicle.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

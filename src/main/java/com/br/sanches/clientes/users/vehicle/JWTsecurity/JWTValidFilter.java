@@ -14,16 +14,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+
 @Component
 public class JWTValidFilter extends BasicAuthenticationFilter {
 
     public static final String HEADER_ATRIBUTE = "Authorization";
     public static final String ATRIBUTE_PREFIX = "Bearer ";
 
-
     public JWTValidFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
     }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -31,11 +32,11 @@ public class JWTValidFilter extends BasicAuthenticationFilter {
 
         String atributo = request.getHeader(HEADER_ATRIBUTE);
 
-        if(atributo == null){
+        if (atributo == null) {
             chain.doFilter(request, response);
             return;
         }
-        if(!atributo.startsWith(ATRIBUTE_PREFIX)){
+        if (!atributo.startsWith(ATRIBUTE_PREFIX)) {
             chain.doFilter(request, response);
             return;
         }
@@ -46,13 +47,14 @@ public class JWTValidFilter extends BasicAuthenticationFilter {
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         chain.doFilter(request, response);
     }
-    private UsernamePasswordAuthenticationToken getAuthenticationToken(String token){
+
+    private UsernamePasswordAuthenticationToken getAuthenticationToken(String token) {
         String user = JWT.require(Algorithm.HMAC512(JWTAuthenticationFilter.TOKEN_PASSWORD))
                 .build()
                 .verify(token)
                 .getSubject();
 
-        if (user == null){
+        if (user == null) {
             return null;
         }
 
