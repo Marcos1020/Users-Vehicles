@@ -32,7 +32,7 @@ public class JWTConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public InMemoryUserDetailsManager userDetailsService(PasswordEncoder passwordEncoder) {
         UserDetails admin = User.withUsername("Markin_Dev10")
-                .password(passwordEncoder.encode("V@lentina_2018"))
+                .password("V@lentina_2018")
                 .roles("ADMIN")
                 .build();
         return new InMemoryUserDetailsManager(admin);

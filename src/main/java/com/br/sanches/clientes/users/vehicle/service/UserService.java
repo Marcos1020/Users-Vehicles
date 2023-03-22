@@ -110,14 +110,14 @@ public class UserService {
 
     public void delete(final Long idUser) throws PreconditionFailedException {
 
-        UserEntity userEntity = this.userRepository.findById(idUser).orElse(null);
+       final UserEntity userEntity = this.userRepository.findById(idUser).orElse(null);
 
         if (Objects.isNull(userEntity)) {
             log.info(Constants.ID_NAO_ENCONTRADO);
             throw new PreconditionFailedException(Constants.ID_NAO_ENCONTRADO);
         }
 
-        Optional<EntityCars> cars = this.carRepository.findByIdUser(userEntity);
+        final Optional<EntityCars> cars = this.carRepository.findByIdUser(userEntity);
         this.carRepository.deleteById(cars.get().getIdCar());
         this.userRepository.delete(userEntity);
     }
