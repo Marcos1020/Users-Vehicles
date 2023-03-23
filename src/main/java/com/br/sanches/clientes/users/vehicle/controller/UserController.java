@@ -4,6 +4,8 @@ import com.br.sanches.clientes.users.vehicle.basePath.BasePath;
 import com.br.sanches.clientes.users.vehicle.controller.request.LoginRequest;
 import com.br.sanches.clientes.users.vehicle.controller.request.UserRequest;
 import com.br.sanches.clientes.users.vehicle.controller.response.UserResponse;
+import com.br.sanches.clientes.users.vehicle.entity.EntityCars;
+import com.br.sanches.clientes.users.vehicle.entity.UserEntity;
 import com.br.sanches.clientes.users.vehicle.exception.ObjectAlreadyExists;
 import com.br.sanches.clientes.users.vehicle.exception.PreconditionFailedException;
 import com.br.sanches.clientes.users.vehicle.service.UserService;
@@ -14,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(BasePath.BASE_PATH_URL)
@@ -60,5 +64,13 @@ public class UserController{
             @RequestBody LoginRequest loginRequest) throws PreconditionFailedException {
         this.userService.userLogin(loginRequest);
         return ResponseEntity.status(HttpStatus.OK).body(Constants.LOGIN_SUCCESSES);
+    }
+
+    @GetMapping(BasePath.BASE_PATH_SERACH_LICENSE_PLATE)
+    public Optional<EntityCars> SearchByPlateVehicle(
+            @RequestParam(name = "licensePlate",
+                    required = true,
+                    value = "licensePlate") String licensePlate ){
+        return userService.SearchByLicensePlate(licensePlate);
     }
 }

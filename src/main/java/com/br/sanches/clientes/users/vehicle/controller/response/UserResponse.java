@@ -22,6 +22,7 @@ public class UserResponse {
     private String name;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String cpf;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String userName;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;

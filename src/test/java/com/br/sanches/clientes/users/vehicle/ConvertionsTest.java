@@ -74,7 +74,7 @@ public class ConvertionsTest {
         entityCars.setCountry("Brasil");
         entityCars.setState("São Paulo");
         entityCars.setCity("Mirassol");
-        entityCars.setIdUser(user);
+        entityCars.setUserEntity(user);
         carRepository.save(entityCars);
         return user;
     }

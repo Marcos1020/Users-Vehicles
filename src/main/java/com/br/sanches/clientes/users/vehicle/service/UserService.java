@@ -61,7 +61,7 @@ public class UserService {
 
         EntityCars carsEntity = new EntityCars();
         convertions.convertCarRequestToEntity(userRequest.getCarRequest(), carsEntity);
-        carsEntity.setIdUser(user);
+        carsEntity.setUserEntity(user);
         EntityCars entitySave = this.carRepository.save(carsEntity);
 
         UserResponse userResponse = convertions.convertEntityToResponse(user);
@@ -73,7 +73,7 @@ public class UserService {
     public UserResponse searchById(Long idUser) throws PreconditionFailedException {
 
         final UserEntity userEntity = this.userRepository.findById(idUser).orElse(null);
-        final EntityCars entityCars = this.carRepository.findByIdUser(userEntity).orElse(null);
+        final EntityCars entityCars = this.carRepository.findByUserEntity(userEntity).orElse(null);
 
         if (Objects.isNull(userEntity)) {
             log.info(Constants.ID_NAO_ENCONTRADO);
@@ -89,7 +89,7 @@ public class UserService {
     public UserResponse updateUserAndCar(final Long idUser, final UserRequest userRequest) throws PreconditionFailedException {
 
         final UserEntity user = this.userRepository.findById(idUser).orElse(null);
-        final EntityCars cars = this.carRepository.findByIdUser(user).orElse(null);
+        final EntityCars cars = this.carRepository.findByUserEntity(user).orElse(null);
 
         if (Objects.isNull(idUser)) {
             log.info(Constants.ID_NAO_ENCONTRADO);
@@ -117,7 +117,7 @@ public class UserService {
             throw new PreconditionFailedException(Constants.ID_NAO_ENCONTRADO);
         }
 
-        final Optional<EntityCars> cars = this.carRepository.findByIdUser(userEntity);
+        final Optional<EntityCars> cars = this.carRepository.findByUserEntity(userEntity);
         this.carRepository.deleteById(cars.get().getIdCar());
         this.userRepository.delete(userEntity);
     }
@@ -136,5 +136,10 @@ public class UserService {
             log.info(Constants.INAVALID_PASSWORD);
             throw new PreconditionFailedException(Constants.INAVALID_PASSWORD);
         }
+    }
+
+    public Optional<EntityCars> SearchByLicensePlate(final String licensePlate){
+         Optional<EntityCars> entityCars = carRepository.findByLicensePlate(licensePlate);
+         return entityCars;
     }
 }

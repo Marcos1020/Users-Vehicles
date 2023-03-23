@@ -1,5 +1,6 @@
 package com.br.sanches.clientes.users.vehicle;
 
+import com.br.sanches.clientes.users.vehicle.basePath.BasePath;
 import com.br.sanches.clientes.users.vehicle.controller.request.LoginRequest;
 import com.br.sanches.clientes.users.vehicle.controller.request.UserRequest;
 import com.br.sanches.clientes.users.vehicle.controller.response.UserResponse;
@@ -20,7 +21,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -44,7 +44,6 @@ class ApplicationTests {
     private CarRepository carRepository;
     private ConvertionsTest convertionsTest;
     private PasswordEncoder passwordEncoder;
-    private AuthenticationManager authenticationManager;
     private final PasswordEncoder encoder;
     private HttpServletRequest request;
 
@@ -53,14 +52,13 @@ class ApplicationTests {
     ApplicationTests(TestRestTemplate restTemplate,
                      UserRepository userRepository,
                      CarRepository carRepository, ConvertionsTest convertionsTest,
-                     PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager,
+                     PasswordEncoder passwordEncoder,
                      PasswordEncoder encoder, HttpServletRequest request) {
         this.restTemplate = restTemplate;
         this.userRepository = userRepository;
         this.carRepository = carRepository;
         this.convertionsTest = convertionsTest;
         this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
         this.encoder = encoder;
         this.request = request;
     }
@@ -80,7 +78,6 @@ class ApplicationTests {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         UserResponse userResponse = response.getBody();
-        assertThat(userResponse.getUserName()).isEqualTo(userRequest.getUserName());
         assertThat(userResponse.getName()).isEqualTo(userRequest.getName());
         assertThat(userResponse.getCarResponse().getLicensePlate()).isEqualTo(userRequest.getCarRequest().getLicensePlate().toUpperCase());
         assertThat(userResponse.getCarResponse().getVehicleModel()).isEqualTo(userRequest.getCarRequest().getVehicleModel().toUpperCase());
@@ -88,10 +85,6 @@ class ApplicationTests {
         assertThat(userResponse.getCarResponse().getState()).isEqualTo(userRequest.getCarRequest().getState());
         assertThat(userResponse.getCarResponse().getCity()).isEqualTo(userRequest.getCarRequest().getCity());
 
-        Optional<UserEntity> savedUser = userRepository.findByUserName(userResponse.getUserName());
-        assertThat(savedUser.isPresent()).isTrue();
-        Optional<EntityCars> savedCar = carRepository.findByLicensePlate(userRequest.getCarRequest().getLicensePlate());
-        assertThat(savedCar.isPresent()).isTrue();
     }
 
     @Test
@@ -105,7 +98,6 @@ class ApplicationTests {
         assertThat(userResponse).isNotNull();
 
         assertThat(userResponse.getIdUser()).isEqualTo(1L);
-        assertThat(userResponse.getUserName()).isEqualTo("Markin_Dev10");
         assertThat(userResponse.getName()).isEqualTo("Marcos Vinicius Campos");
         assertThat(userResponse.getCarResponse().getLicensePlate().toUpperCase()).isEqualTo("OLK1234");
         assertThat(userResponse.getCarResponse().getVehicleModel().toUpperCase()).isEqualTo("HONDA CIVIC LXS");
@@ -127,7 +119,6 @@ class ApplicationTests {
 
         UserResponse userResponse = response.getBody();
         assertNotNull(userResponse);
-        assertThat(userResponse.getUserName()).isEqualTo(userRequest.getUserName());
         assertThat(userResponse.getName()).isEqualTo(userRequest.getName());
         assertNotNull(userResponse.getCarResponse());
         assertThat(userResponse.getCarResponse().getLicensePlate()).isEqualTo(userRequest.getCarRequest().getLicensePlate().toUpperCase());
@@ -146,7 +137,7 @@ class ApplicationTests {
         EntityCars entityCars = carRepository.findById(1L).orElse(null);
         assertNotNull(entityCars);
 
-        entityCars.setIdUser(userEntity);
+        entityCars.setUserEntity(userEntity);
         carRepository.save(entityCars);
 
         ResponseEntity<String> response = restTemplate.exchange("http://localhost:9060/clientes/users/deletar/1",
@@ -160,7 +151,7 @@ class ApplicationTests {
     }
 
     @Test
-    public void testUserLogin() throws PreconditionFailedException {
+    public void sholdReturnOkUserLogin() throws PreconditionFailedException {
 
         Optional<UserEntity> user = userRepository.findByUserName("Markin_Dev10");
 
@@ -173,5 +164,22 @@ class ApplicationTests {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(Constants.LOGIN_SUCCESSES);
+    }
+
+    @Test
+    public void sholdReturnCarDataByYourLicensePlate() throws PreconditionFailedException {
+
+        ResponseEntity<EntityCars> response = restTemplate.getForEntity(
+               "http://localhost:9060/clientes/users/serach/license-plate?licensePlate=olk1234", EntityCars.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        EntityCars carResponse = response.getBody();
+        assertThat(carResponse).isNotNull();
+        assertThat(carResponse.getUserEntity().getName()).isEqualTo("Marcos Vinicius Campos");
+        assertThat(carResponse.getLicensePlate().toUpperCase()).isEqualTo("OLK1234");
+        assertThat(carResponse.getVehicleModel().toUpperCase()).isEqualTo("HONDA CIVIC LXS");
+        assertThat(carResponse.getCountry()).isEqualTo("Brasil");
+        assertThat(carResponse.getState()).isEqualTo("São Paulo");
+        assertThat(carResponse.getCity()).isEqualTo("Mirassol");
     }
 }
