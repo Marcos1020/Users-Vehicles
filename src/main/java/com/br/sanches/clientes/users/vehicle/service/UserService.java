@@ -12,10 +12,12 @@ import com.br.sanches.clientes.users.vehicle.repository.CarRepository;
 import com.br.sanches.clientes.users.vehicle.repository.UserRepository;
 import com.br.sanches.clientes.users.vehicle.utils.Constants;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.jni.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 
 import java.util.Objects;
@@ -70,14 +72,18 @@ public class UserService {
         return userResponse;
     }
 
-    public UserResponse searchById(Long idUser) throws PreconditionFailedException {
+    public UserResponse searchByName(final String name) throws PreconditionFailedException {
 
-        final UserEntity userEntity = this.userRepository.findById(idUser).orElse(null);
-        final EntityCars entityCars = this.carRepository.findByUserEntity(userEntity).orElse(null);
+        UserEntity userEntity = this.userRepository.findByName(name);
+        EntityCars entityCars = this.carRepository.findByUserEntity(userEntity).orElse(null);
 
         if (Objects.isNull(userEntity)) {
-            log.info(Constants.ID_NAO_ENCONTRADO);
-            throw new PreconditionFailedException(Constants.ID_NAO_ENCONTRADO);
+            log.info(Constants.NAME_NOT_FOUND);
+            throw new PreconditionFailedException(Constants.NAME_NOT_FOUND);
+
+        } else if (!name.equalsIgnoreCase(entityCars.getUserEntity().getName())) {
+            log.info(Constants.INCORRECT_NAME);
+            throw new PreconditionFailedException(Constants.INCORRECT_NAME);
         }
 
         UserResponse userResponse = convertions.convertEntityToResponse(userEntity);
@@ -91,7 +97,11 @@ public class UserService {
         final UserEntity user = this.userRepository.findById(idUser).orElse(null);
         final EntityCars cars = this.carRepository.findByUserEntity(user).orElse(null);
 
-        if (Objects.isNull(idUser)) {
+        if (Objects.isNull(user)) {
+            log.info(Constants.ID_NAO_ENCONTRADO);
+            throw new PreconditionFailedException(Constants.ID_NAO_ENCONTRADO);
+
+        } else if (!idUser.equals(cars.getUserEntity().getIdUser())) {
             log.info(Constants.ID_NAO_ENCONTRADO);
             throw new PreconditionFailedException(Constants.ID_NAO_ENCONTRADO);
         }
@@ -110,9 +120,13 @@ public class UserService {
 
     public void delete(final Long idUser) throws PreconditionFailedException {
 
-       final UserEntity userEntity = this.userRepository.findById(idUser).orElse(null);
+        final UserEntity userEntity = this.userRepository.findById(idUser).orElse(null);
 
         if (Objects.isNull(userEntity)) {
+            log.info(Constants.ID_NAO_ENCONTRADO);
+            throw new PreconditionFailedException(Constants.ID_NAO_ENCONTRADO);
+
+        } else if (!idUser.equals(userEntity.getIdUser())) {
             log.info(Constants.ID_NAO_ENCONTRADO);
             throw new PreconditionFailedException(Constants.ID_NAO_ENCONTRADO);
         }
@@ -128,9 +142,9 @@ public class UserService {
 
         final Optional<UserEntity> userEntity = this.userRepository.findByUserName(loginRequest.getUserName());
 
-        if (Objects.isNull(userEntity)) {
-            log.info(Constants.USER_NOT_FOUND);
-            throw new PreconditionFailedException(Constants.USER_NOT_FOUND);
+        if (!userEntity.isPresent()) {
+            log.info(Constants.INVALID_USER);
+            throw new PreconditionFailedException(Constants.INVALID_USER);
 
         } else if (!encoder.matches(loginRequest.getPassword(), userEntity.get().getPassword())) {
             log.info(Constants.INAVALID_PASSWORD);
@@ -138,8 +152,21 @@ public class UserService {
         }
     }
 
-    public Optional<EntityCars> SearchByLicensePlate(final String licensePlate){
-         Optional<EntityCars> entityCars = carRepository.findByLicensePlate(licensePlate);
-         return entityCars;
+    public EntityCars searchByLicensePlate(final String licensePlate) throws PreconditionFailedException {
+
+        Optional<EntityCars> entityCars = carRepository.findByLicensePlate(licensePlate);
+
+        if (!entityCars.isPresent()) {
+            log.info(Constants.SEARCH_BY_LICENSE_PLATE_FAILED);
+            throw new PreconditionFailedException(Constants.SEARCH_BY_LICENSE_PLATE_FAILED);
+        }
+
+        EntityCars car = entityCars.get();
+        if (!licensePlate.equalsIgnoreCase(car.getLicensePlate())) {
+            log.info(Constants.SEARCH_BY_LICENSE_PLATE_FAILED);
+            throw new PreconditionFailedException(Constants.SEARCH_BY_LICENSE_PLATE_FAILED);
+        }
+
+        return car;
     }
 }

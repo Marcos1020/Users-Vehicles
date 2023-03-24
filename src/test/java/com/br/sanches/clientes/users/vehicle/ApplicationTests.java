@@ -90,7 +90,8 @@ class ApplicationTests {
     @Test
     public void sholdSearchByUserId() throws PreconditionFailedException {
 
-        ResponseEntity<UserResponse> response = this.restTemplate.getForEntity("http://localhost:9060/clientes/users/busca/1",
+        ResponseEntity<UserResponse> response = this.restTemplate.getForEntity(
+                "http://localhost:9060/clientes/users/search?name=Marcos Vinicius Campos",
                 UserResponse.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -111,7 +112,8 @@ class ApplicationTests {
 
         UserRequest userRequest = convertionsTest.updateUserAndCarTest();
 
-        ResponseEntity<UserResponse> response = restTemplate.exchange("http://localhost:9060/clientes/users/altera-os-dados/1",
+        ResponseEntity<UserResponse> response = restTemplate.exchange(
+                "http://localhost:9060/clientes/users/altera-os-dados/1",
                 HttpMethod.PUT, new HttpEntity<>(userRequest),
                 UserResponse.class);
 
@@ -140,7 +142,8 @@ class ApplicationTests {
         entityCars.setUserEntity(userEntity);
         carRepository.save(entityCars);
 
-        ResponseEntity<String> response = restTemplate.exchange("http://localhost:9060/clientes/users/deletar/1",
+        ResponseEntity<String> response = restTemplate.exchange(
+                "http://localhost:9060/clientes/users/deletar/1",
                 HttpMethod.DELETE, null, String.class,
                 userEntity.getIdUser());
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -159,7 +162,8 @@ class ApplicationTests {
         loginRequest.setUserName(user.get().getUserName());
         loginRequest.setPassword("Br12-Je11-Rb87");
 
-        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:9060/clientes/users/login-user",
+        ResponseEntity<String> response = restTemplate.postForEntity(
+                "http://localhost:9060/clientes/users/login-user",
                 loginRequest, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -170,7 +174,8 @@ class ApplicationTests {
     public void sholdReturnCarDataByYourLicensePlate() throws PreconditionFailedException {
 
         ResponseEntity<EntityCars> response = restTemplate.getForEntity(
-               "http://localhost:9060/clientes/users/serach/license-plate?licensePlate=olk1234", EntityCars.class);
+               "http://localhost:9060/clientes/users/serach/license-plate?licensePlate=olk1234",
+                EntityCars.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         EntityCars carResponse = response.getBody();
