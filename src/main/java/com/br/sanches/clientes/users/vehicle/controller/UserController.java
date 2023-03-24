@@ -34,14 +34,16 @@ public class UserController {
             final UserResponse response = this.userService.newUser(userRequest);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
 
-        }catch (ObjectAlreadyExists exists){
+        } catch (ObjectAlreadyExists exists) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(exists.getMessage());
         }
     }
 
     @GetMapping(BasePath.BASE_PARAM_NAME)
     public ResponseEntity<?> searchByUserId(
-            @RequestParam(name = "name", required = true, value = "name") final String name) throws PreconditionFailedException {
+            @RequestParam(name = "name",
+                    required = true,
+                    value = "name") final String name) throws PreconditionFailedException {
         try {
             final UserResponse response = this.userService.searchByName(name);
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -88,11 +90,11 @@ public class UserController {
         }
     }
 
-
     @GetMapping(BasePath.BASE_PARAM_SEARCH_LICENSE_PLATE)
-    public ResponseEntity<?> searchByPlateVehicle(@RequestParam(name = "licensePlate",
-            required = true,
-            value = "licensePlate") String licensePlate) throws PreconditionFailedException {
+    public ResponseEntity<?> searchByPlateVehicle(
+            @RequestParam(name = "licensePlate",
+                    required = true,
+                    value = "licensePlate") String licensePlate) throws PreconditionFailedException {
         try {
             EntityCars car = userService.searchByLicensePlate(licensePlate);
             return ResponseEntity.ok(car);

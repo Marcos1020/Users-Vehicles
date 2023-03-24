@@ -94,23 +94,23 @@ public class UserService {
 
     public UserResponse updateUserAndCar(final Long idUser, final UserRequest userRequest) throws PreconditionFailedException {
 
-        final UserEntity user = this.userRepository.findById(idUser).orElse(null);
-        final EntityCars cars = this.carRepository.findByUserEntity(user).orElse(null);
+        final UserEntity userEntity = this.userRepository.findById(idUser).orElse(null);
+        final EntityCars entityCarscars = this.carRepository.findByUserEntity(userEntity).orElse(null);
 
-        if (Objects.isNull(user)) {
+        if (Objects.isNull(userEntity)) {
             log.info(Constants.ID_NAO_ENCONTRADO);
             throw new PreconditionFailedException(Constants.ID_NAO_ENCONTRADO);
 
-        } else if (!idUser.equals(cars.getUserEntity().getIdUser())) {
+        } else if (!idUser.equals(entityCarscars.getUserEntity().getIdUser())) {
             log.info(Constants.ID_NAO_ENCONTRADO);
             throw new PreconditionFailedException(Constants.ID_NAO_ENCONTRADO);
         }
 
-        convertions.convertUpdateUserRequest(userRequest, user);
-        UserEntity entityUser = this.userRepository.save(user);
+        convertions.convertUpdateUserRequest(userRequest, userEntity);
+        UserEntity entityUser = this.userRepository.save(userEntity);
 
-        convertions.convertUpdateCarRequest(userRequest.getCarRequest(), cars);
-        EntityCars carsEntity = this.carRepository.save(cars);
+        convertions.convertUpdateCarRequest(userRequest.getCarRequest(), entityCarscars);
+        EntityCars carsEntity = this.carRepository.save(entityCarscars);
 
         UserResponse userResponse = convertions.convertEntityToResponse(entityUser);
         userResponse.setCarResponse(convertions.convertEntityToResponsetoCar(carsEntity));
@@ -154,19 +154,19 @@ public class UserService {
 
     public EntityCars searchByLicensePlate(final String licensePlate) throws PreconditionFailedException {
 
-        Optional<EntityCars> entityCars = carRepository.findByLicensePlate(licensePlate);
+        Optional<EntityCars> carsEntity = carRepository.findByLicensePlate(licensePlate);
 
-        if (!entityCars.isPresent()) {
+        if (!carsEntity.isPresent()) {
             log.info(Constants.SEARCH_BY_LICENSE_PLATE_FAILED);
             throw new PreconditionFailedException(Constants.SEARCH_BY_LICENSE_PLATE_FAILED);
         }
 
-        EntityCars car = entityCars.get();
-        if (!licensePlate.equalsIgnoreCase(car.getLicensePlate())) {
+        EntityCars entityCars = carsEntity.get();
+        if (!licensePlate.equalsIgnoreCase(entityCars.getLicensePlate())) {
             log.info(Constants.SEARCH_BY_LICENSE_PLATE_FAILED);
             throw new PreconditionFailedException(Constants.SEARCH_BY_LICENSE_PLATE_FAILED);
         }
 
-        return car;
+        return entityCars;
     }
 }
