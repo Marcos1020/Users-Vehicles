@@ -11,6 +11,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Data
@@ -24,6 +26,7 @@ public class UserEntity {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "ID_USER")
     private Long idUser;
+    @NotEmpty(message = "O campo cpf é obrigatório")
     @Column(name = "NAME")
     private String name;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -33,6 +36,8 @@ public class UserEntity {
     @Column(name = "PASSWORD")
     private String password;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotEmpty(message = "O campo cpf é obrigatório")
+    @Size(min = 11, max = 12, message = "CPF deve conter no minimo 11 caracters")
     @Column(name = "CPF")
     private String cpf;
     @JsonDeserialize(using = DateAndTimeDeserializer.class)

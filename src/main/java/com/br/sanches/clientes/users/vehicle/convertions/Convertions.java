@@ -6,6 +6,7 @@ import com.br.sanches.clientes.users.vehicle.controller.response.CarResponse;
 import com.br.sanches.clientes.users.vehicle.controller.response.UserResponse;
 import com.br.sanches.clientes.users.vehicle.entity.EntityCars;
 import com.br.sanches.clientes.users.vehicle.entity.UserEntity;
+import com.br.sanches.clientes.users.vehicle.exception.BadRequestException;
 import com.br.sanches.clientes.users.vehicle.exception.PreconditionFailedException;
 import com.br.sanches.clientes.users.vehicle.utils.Constants;
 import com.br.sanches.clientes.users.vehicle.utils.ConverterUtil;
@@ -59,29 +60,26 @@ public class Convertions {
         carResponse.setCity(cars.getCity());
         return carResponse;
     }
-    public void convertUpdateCarRequest(CarRequest carRequest, EntityCars entityCars)throws PreconditionFailedException {
+    public void convertUpdateCarRequest(CarRequest updateCarRequest, EntityCars entityCars)throws BadRequestException {
        try {
-           entityCars.setLicensePlate(carRequest.getLicensePlate().toUpperCase());
-           entityCars.setVehicleModel(carRequest.getVehicleModel().toUpperCase());
-           entityCars.setCountry(carRequest.getCountry());
-           entityCars.setState(carRequest.getState());
-           entityCars.setCity(carRequest.getCity());
-       }catch (PreconditionFailedException exception){
-           log.info(Constants.CAMPOS_OBRIGATORIOS);
-           throw new PreconditionFailedException(Constants.CAMPOS_OBRIGATORIOS);
+           entityCars.setCountry(updateCarRequest.getCountry());
+           entityCars.setState(updateCarRequest.getState());
+           entityCars.setCity(updateCarRequest.getCity());
+       }catch (BadRequestException exception){
+           log.info(Constants.MANDATORY_FIELDS);
+           throw new BadRequestException(Constants.MANDATORY_FIELDS);
        }
     }
-    public void convertUpdateUserRequest(UserRequest userRequest, UserEntity user) throws PreconditionFailedException {
+    public void convertUpdateUserRequest(UserRequest userRequest, UserEntity user) throws BadRequestException {
         try {
             user.setName(userRequest.getName());
             user.setCpf(encoder.encode(userRequest.getCpf()));
             user.setUserName(userRequest.getUserName());
             user.setPassword(encoder.encode(userRequest.getPassword()));
             user.setDateUpdate(ConverterUtil.nowTime());
-        }catch (Exception exception){
-            log.info(Constants.CAMPOS_OBRIGATORIOS);
-            throw new PreconditionFailedException(Constants.CAMPOS_OBRIGATORIOS);
+        }catch (BadRequestException exception){
+            log.info(Constants.MANDATORY_FIELDS);
+            throw new BadRequestException(Constants.MANDATORY_FIELDS);
         }
     }
-
 }

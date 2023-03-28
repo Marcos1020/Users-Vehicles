@@ -1,25 +1,27 @@
 package com.br.sanches.clientes.users.vehicle.service;
 
 import com.br.sanches.clientes.users.vehicle.controller.request.LoginRequest;
+import com.br.sanches.clientes.users.vehicle.controller.request.UpdateLicensePlateOrModelVehicleRequest;
 import com.br.sanches.clientes.users.vehicle.controller.request.UserRequest;
 import com.br.sanches.clientes.users.vehicle.controller.response.UserResponse;
 import com.br.sanches.clientes.users.vehicle.convertions.Convertions;
 import com.br.sanches.clientes.users.vehicle.entity.EntityCars;
 import com.br.sanches.clientes.users.vehicle.entity.UserEntity;
+import com.br.sanches.clientes.users.vehicle.exception.BadRequestException;
 import com.br.sanches.clientes.users.vehicle.exception.ObjectAlreadyExists;
 import com.br.sanches.clientes.users.vehicle.exception.PreconditionFailedException;
 import com.br.sanches.clientes.users.vehicle.repository.CarRepository;
 import com.br.sanches.clientes.users.vehicle.repository.UserRepository;
 import com.br.sanches.clientes.users.vehicle.utils.Constants;
+import com.br.sanches.clientes.users.vehicle.utils.ConverterUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.jni.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
-
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -92,18 +94,18 @@ public class UserService {
         return userResponse;
     }
 
-    public UserResponse updateUserAndCar(final Long idUser, final UserRequest userRequest) throws PreconditionFailedException {
+    public UserResponse updateUserAndCar(final Long idUser, final UserRequest userRequest) throws BadRequestException {
 
         final UserEntity userEntity = this.userRepository.findById(idUser).orElse(null);
         final EntityCars entityCarscars = this.carRepository.findByUserEntity(userEntity).orElse(null);
 
         if (Objects.isNull(userEntity)) {
-            log.info(Constants.ID_NAO_ENCONTRADO);
-            throw new PreconditionFailedException(Constants.ID_NAO_ENCONTRADO);
+            log.info(Constants.ID_NOT_FOUND);
+            throw new BadRequestException(Constants.ID_NOT_FOUND);
 
         } else if (!idUser.equals(entityCarscars.getUserEntity().getIdUser())) {
-            log.info(Constants.ID_NAO_ENCONTRADO);
-            throw new PreconditionFailedException(Constants.ID_NAO_ENCONTRADO);
+            log.info(Constants.ID_NOT_FOUND);
+            throw new BadRequestException(Constants.ID_NOT_FOUND);
         }
 
         convertions.convertUpdateUserRequest(userRequest, userEntity);
@@ -123,12 +125,12 @@ public class UserService {
         final UserEntity userEntity = this.userRepository.findById(idUser).orElse(null);
 
         if (Objects.isNull(userEntity)) {
-            log.info(Constants.ID_NAO_ENCONTRADO);
-            throw new PreconditionFailedException(Constants.ID_NAO_ENCONTRADO);
+            log.info(Constants.ID_NOT_FOUND);
+            throw new PreconditionFailedException(Constants.ID_NOT_FOUND);
 
         } else if (!idUser.equals(userEntity.getIdUser())) {
-            log.info(Constants.ID_NAO_ENCONTRADO);
-            throw new PreconditionFailedException(Constants.ID_NAO_ENCONTRADO);
+            log.info(Constants.ID_NOT_FOUND);
+            throw new PreconditionFailedException(Constants.ID_NOT_FOUND);
         }
 
         final Optional<EntityCars> cars = this.carRepository.findByUserEntity(userEntity);
@@ -168,5 +170,61 @@ public class UserService {
         }
 
         return entityCars;
+    }
+
+    public UserResponse updateLicensePlate(final Long idUser, final UpdateLicensePlateOrModelVehicleRequest request) throws BadRequestException {
+
+        final UserEntity userEntity = this.userRepository.findById(idUser).orElse(null);
+        final EntityCars entityCars = this.carRepository.findByUserEntity(userEntity).orElse(null);
+
+        if (!entityCars.getUserEntity().getIdUser().equals(idUser)) {
+            log.info(Constants.ID_NOT_FOUND);
+            throw new BadRequestException(Constants.ID_NOT_FOUND);
+
+        } else if (request.getLicensePlate().equalsIgnoreCase(entityCars.getLicensePlate())) {
+            log.info(Constants.VEHICLE_PLATE_ALREADY_REGISTERED);
+            throw new BadRequestException(Constants.VEHICLE_PLATE_ALREADY_REGISTERED);
+        }
+        try {
+            entityCars.setLicensePlate(request.getLicensePlate().toUpperCase());
+            entityCars.setDateUpdate(ConverterUtil.nowTime());
+
+        } catch (BadRequestException exception) {
+            log.info(Constants.MANDATORY_FIELDS);
+            throw new BadRequestException(Constants.MANDATORY_FIELDS);
+        }
+        EntityCars carsEntity = this.carRepository.save(entityCars);
+
+        UserResponse userResponse = convertions.convertEntityToResponse(userEntity);
+        userResponse.setCarResponse(convertions.convertEntityToResponsetoCar(carsEntity));
+
+        return userResponse;
+    }
+
+    public EntityCars updateVehicleModel(final String licensePlate, final UpdateLicensePlateOrModelVehicleRequest request) throws BadRequestException{
+
+        Optional<EntityCars> entityCars = carRepository.findByLicensePlate(licensePlate);
+
+        if (!entityCars.isPresent()) {
+            log.info(Constants.INVALID_VEHICLE_LICENSE_PLATE);
+            throw new BadRequestException(Constants.INVALID_VEHICLE_LICENSE_PLATE);
+
+        } else if (!entityCars.get().getLicensePlate().equalsIgnoreCase(licensePlate)) {
+            log.info(Constants.SEARCH_BY_LICENSE_PLATE_FAILED);
+            throw new BadRequestException(Constants.SEARCH_BY_LICENSE_PLATE_FAILED);
+        }
+
+        try {
+            entityCars.get().setVehicleModel(request.getVehicleModel().toUpperCase());
+            entityCars.get().setDateUpdate(ConverterUtil.nowTime());
+
+        } catch (BadRequestException exception) {
+            log.info(Constants.MANDATORY_FIELDS);
+            throw new BadRequestException(Constants.MANDATORY_FIELDS);
+        }
+
+        EntityCars carsEntity = this.carRepository.save(entityCars.orElseThrow(()
+                -> new BadRequestException(Constants.INVALID_ENTITY)));
+        return carsEntity;
     }
 }

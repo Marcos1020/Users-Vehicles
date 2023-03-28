@@ -6,4 +6,5 @@ COUNTRY varchar(20)NOT null,
 STATE varchar(50) NOT null,
 CITY varchar(80)NOT null,
 VEHICLE_MODEL varchar(70),
+DT_UPDATE  TIMESTAMP,
 PRIMARY KEY(`ID_CAR`));
