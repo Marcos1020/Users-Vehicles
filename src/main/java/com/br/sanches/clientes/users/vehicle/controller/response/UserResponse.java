@@ -18,19 +18,27 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserResponse {
+
     private Long idUser;
+
     private String name;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String cpf;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String userName;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+
     @JsonDeserialize(using = DateAndTimeDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ConverterUtil.FORMATO_DATA)
     private Date dateRegister;
+
     @JsonDeserialize(using = DateAndTimeDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ConverterUtil.FORMATO_DATA)
     private Date dateUpdate;
+
     private CarResponse carResponse;
 }

@@ -1,6 +1,7 @@
 package com.br.sanches.clientes.users.vehicle;
 
 import com.br.sanches.clientes.users.vehicle.controller.request.CarRequest;
+import com.br.sanches.clientes.users.vehicle.controller.request.UpdateLicensePlateOrModelVehicleRequest;
 import com.br.sanches.clientes.users.vehicle.controller.request.UserRequest;
 import com.br.sanches.clientes.users.vehicle.entity.EntityCars;
 import com.br.sanches.clientes.users.vehicle.entity.UserEntity;
@@ -49,8 +50,6 @@ public class ConvertionsTest {
         userRequest.setPassword("Br12-Je11-Rb87");
 
         CarRequest carRequest = new CarRequest();
-        carRequest.setLicensePlate("uir1234");
-        carRequest.setVehicleModel("bmw m4");
         carRequest.setCountry("Brasil");
         carRequest.setState("São Paulo");
         carRequest.setCity("Mirassol");
@@ -77,5 +76,14 @@ public class ConvertionsTest {
         entityCars.setUserEntity(user);
         carRepository.save(entityCars);
         return user;
+    }
+
+    @NotNull
+    public UpdateLicensePlateOrModelVehicleRequest changeTheLicensePlateOfAVehicle(){
+
+        UpdateLicensePlateOrModelVehicleRequest update = new UpdateLicensePlateOrModelVehicleRequest();
+        update.setLicensePlate("EFP0834");
+
+        return update;
     }
 }

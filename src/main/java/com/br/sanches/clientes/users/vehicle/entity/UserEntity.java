@@ -21,30 +21,38 @@ import java.util.Date;
 @Entity
 @Table(name = "USERS_TB")
 public class UserEntity {
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "ID_USER")
+
     private Long idUser;
     @NotEmpty(message = "O campo cpf é obrigatório")
+
     @Column(name = "NAME")
     private String name;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "USER_NAME")
     private String userName;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "PASSWORD")
     private String password;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotEmpty(message = "O campo cpf é obrigatório")
-    @Size(min = 11, max = 12, message = "CPF deve conter no minimo 11 caracters")
+    @Size(min = 10, message = "CPF deve conter no minimo 11 caracters")
     @Column(name = "CPF")
     private String cpf;
+
     @JsonDeserialize(using = DateAndTimeDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ConverterUtil.FORMATO_DATA)
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_REGISTER")
     private Date dateRegister;
+
     @JsonDeserialize(using = DateAndTimeDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ConverterUtil.FORMATO_DATA)
     @Temporal(TemporalType.TIMESTAMP)

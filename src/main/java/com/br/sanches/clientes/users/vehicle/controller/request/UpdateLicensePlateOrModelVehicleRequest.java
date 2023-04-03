@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class UpdateLicensePlateOrModelVehicleRequest {
 
     private String licensePlate;
+
     private String vehicleModel;
 
 }

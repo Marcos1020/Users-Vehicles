@@ -9,9 +9,14 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CarRequest {
+
     private String licensePlate;
+
     private String vehicleModel;
+
     private String country;
+
     private String state;
+
     private String city;
 }

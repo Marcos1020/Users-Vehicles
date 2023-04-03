@@ -14,6 +14,8 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @NoArgsConstructor
 @JsonInclude(NON_NULL)
 public class LoginRequest {
+
     private String userName;
+
     private String password;
 }
