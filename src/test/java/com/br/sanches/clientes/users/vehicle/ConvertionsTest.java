@@ -58,31 +58,10 @@ public class ConvertionsTest {
     }
 
     @NotNull
-    public UserEntity SaveUserEntityAndCarEntityToTestUpdateUserANdVehicle() {
-        UserEntity user = new UserEntity();
-        user.setName("Marcos Vinicius");
-        user.setUserName("NinjaFodão");
-        user.setCpf("39610007864");
-        user.setPassword("Br12-Je11-Rb87");
-        user.setDateRegister(ConverterUtil.nowTime());
-        userRepository.save(user);
-
-        EntityCars entityCars = new EntityCars();
-        entityCars.setVehicleModel("Ferrari f40");
-        entityCars.setLicensePlate("wre0632");
-        entityCars.setCountry("Brasil");
-        entityCars.setState("São Paulo");
-        entityCars.setCity("Mirassol");
-        entityCars.setUserEntity(user);
-        carRepository.save(entityCars);
-        return user;
-    }
-
-    @NotNull
     public UpdateLicensePlateOrModelVehicleRequest changeTheLicensePlateOfAVehicle(){
 
         UpdateLicensePlateOrModelVehicleRequest update = new UpdateLicensePlateOrModelVehicleRequest();
-        update.setLicensePlate("EFP0834");
+        update.setLicensePlate("EFL0824");
 
         return update;
     }

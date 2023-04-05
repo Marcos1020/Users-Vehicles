@@ -204,5 +204,23 @@ class ApplicationTests {
         assertThat(carResponse.getCity()).isEqualTo("Mirassol");
     }
 
+    @Test
+    public void MustChangeTheLicensePlateOfAVehicleThatWasRegisteredWrong() throws Exception {
 
+        UpdateLicensePlateOrModelVehicleRequest userRequest = convertionsTest.changeTheLicensePlateOfAVehicle();
+        String jsonRequest = objectMapper.writeValueAsString(userRequest);
+
+        MvcResult mvcResult = mockMvc.perform(patch("/clientes/users/alter/license-plate")
+                        .param("idUser", "1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseJson = mvcResult.getResponse().getContentAsString(Charset.forName("UTF-8"));
+        UserResponse userResponse = objectMapper.readValue(responseJson, UserResponse.class);
+
+        assertThat(userResponse).isNotNull();
+        assertThat(userResponse.getCarResponse().getLicensePlate()).isEqualTo("EFL0824");
+    }
 }
