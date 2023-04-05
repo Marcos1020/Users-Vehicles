@@ -19,11 +19,9 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @JsonInclude(NON_NULL)
 public class UserRequest {
 
-    @NotEmpty(message = "O campo nome é obrigatório")
+
     private String name;
 
-    @NotEmpty(message = "O campo cpf é obrigatório")
-    @Size(min = 11, max = 12, message = "CPF deve conter no minimo 11 caracters")
     private String cpf;
 
     private String userName;

@@ -7,11 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CarRequest {
-
-    private String licensePlate;
-
-    private String vehicleModel;
+public class UpdateLocalizationVehicle {
 
     private String country;
 

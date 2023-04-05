@@ -1,6 +1,8 @@
 package com.br.sanches.clientes.users.vehicle.convertions;
 
 import com.br.sanches.clientes.users.vehicle.controller.request.CarRequest;
+import com.br.sanches.clientes.users.vehicle.controller.request.UpdateLocalizationVehicle;
+import com.br.sanches.clientes.users.vehicle.controller.request.UpdateUserRequest;
 import com.br.sanches.clientes.users.vehicle.controller.request.UserRequest;
 import com.br.sanches.clientes.users.vehicle.controller.response.CarResponse;
 import com.br.sanches.clientes.users.vehicle.controller.response.UserResponse;
@@ -60,7 +62,7 @@ public class Convertions {
         carResponse.setCity(cars.getCity());
         return carResponse;
     }
-    public void convertUpdateCarRequest(CarRequest updateCarRequest, EntityCars entityCars)throws BadRequestException {
+    public void convertUpdateCarRequest(UpdateLocalizationVehicle updateCarRequest, EntityCars entityCars)throws BadRequestException {
        try {
            entityCars.setCountry(updateCarRequest.getCountry());
            entityCars.setState(updateCarRequest.getState());
@@ -70,12 +72,12 @@ public class Convertions {
            throw new BadRequestException(Constants.MANDATORY_FIELDS);
        }
     }
-    public void convertUpdateUserRequest(UserRequest userRequest, UserEntity user) throws BadRequestException {
+    public void convertUpdateUserRequest(UpdateUserRequest updateUserRequest, UserEntity user) throws BadRequestException {
         try {
-            user.setName(userRequest.getName());
-            user.setCpf(encoder.encode(userRequest.getCpf()));
-            user.setUserName(userRequest.getUserName());
-            user.setPassword(encoder.encode(userRequest.getPassword()));
+            user.setName(updateUserRequest.getName());
+            user.setCpf(encoder.encode(updateUserRequest.getCpf()));
+            user.setUserName(updateUserRequest.getUserName());
+            user.setPassword(encoder.encode(updateUserRequest.getPassword()));
             user.setDateUpdate(ConverterUtil.nowTime());
         }catch (BadRequestException exception){
             log.info(Constants.MANDATORY_FIELDS);

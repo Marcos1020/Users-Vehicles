@@ -2,6 +2,7 @@ package com.br.sanches.clientes.users.vehicle.service;
 
 import com.br.sanches.clientes.users.vehicle.controller.request.LoginRequest;
 import com.br.sanches.clientes.users.vehicle.controller.request.UpdateLicensePlateOrModelVehicleRequest;
+import com.br.sanches.clientes.users.vehicle.controller.request.UpdateUserRequest;
 import com.br.sanches.clientes.users.vehicle.controller.request.UserRequest;
 import com.br.sanches.clientes.users.vehicle.controller.response.UserResponse;
 import com.br.sanches.clientes.users.vehicle.convertions.Convertions;
@@ -45,12 +46,13 @@ public class UserService {
 
     public UserResponse newUser(UserRequest userRequest) throws ObjectAlreadyExists {
 
-        log.info(Constants.REGISTER_NEW_USER);
+        log.info(Constants.REGISTER_NEW_USER_AND_BEHICLE);
 
         Optional<UserEntity> userEntity = this.userRepository.findByUserName(userRequest.getUserName());
         if (userEntity.isPresent()) {
             log.info(Constants.USER_NAME_EXISTING);
             throw new ObjectAlreadyExists(Constants.USER_NAME_EXISTING);
+
         } else {
             Optional<EntityCars> entityCars = this.carRepository.findByLicensePlate(userRequest.getCarRequest().getLicensePlate());
             if (entityCars.isPresent()) {
@@ -94,25 +96,25 @@ public class UserService {
         return userResponse;
     }
 
-    public UserResponse updateUserAndCar(final Long idUser, final UserRequest userRequest) throws BadRequestException {
+    public UserResponse updateUserAndCar(final Long idUser, final UpdateUserRequest updateUserRequest) throws BadRequestException {
 
         final UserEntity userEntity = this.userRepository.findById(idUser).orElse(null);
-        final EntityCars entityCarscars = this.carRepository.findByUserEntity(userEntity).orElse(null);
+        final EntityCars entityCars = this.carRepository.findByUserEntity(userEntity).orElse(null);
 
         if (Objects.isNull(userEntity)) {
             log.info(Constants.ID_NOT_FOUND);
             throw new BadRequestException(Constants.ID_NOT_FOUND);
 
-        } else if (!idUser.equals(entityCarscars.getUserEntity().getIdUser())) {
+        } else if (!idUser.equals(entityCars.getUserEntity().getIdUser())) {
             log.info(Constants.ID_NOT_FOUND);
             throw new BadRequestException(Constants.ID_NOT_FOUND);
         }
 
-        convertions.convertUpdateUserRequest(userRequest, userEntity);
+        convertions.convertUpdateUserRequest(updateUserRequest, userEntity);
         UserEntity entityUser = this.userRepository.save(userEntity);
 
-        convertions.convertUpdateCarRequest(userRequest.getCarRequest(), entityCarscars);
-        EntityCars carsEntity = this.carRepository.save(entityCarscars);
+        convertions.convertUpdateCarRequest(updateUserRequest.getLocalizationVehicle(), entityCars);
+        EntityCars carsEntity = this.carRepository.save(entityCars);
 
         UserResponse userResponse = convertions.convertEntityToResponse(entityUser);
         userResponse.setCarResponse(convertions.convertEntityToResponsetoCar(carsEntity));
@@ -138,7 +140,7 @@ public class UserService {
         this.userRepository.delete(userEntity);
     }
 
-    public void userLogin(LoginRequest loginRequest) throws PreconditionFailedException {
+    public void userLogin(LoginRequest loginRequest) throws BadRequestException {
 
         log.info(Constants.INITIALIZER_LOGIN_USER);
 
@@ -154,19 +156,19 @@ public class UserService {
         }
     }
 
-    public EntityCars searchByLicensePlate(final String licensePlate) throws PreconditionFailedException {
+    public EntityCars searchByLicensePlate(final String licensePlate) throws BadRequestException {
 
         Optional<EntityCars> carsEntity = carRepository.findByLicensePlate(licensePlate);
 
         if (!carsEntity.isPresent()) {
             log.info(Constants.SEARCH_BY_LICENSE_PLATE_FAILED);
-            throw new PreconditionFailedException(Constants.SEARCH_BY_LICENSE_PLATE_FAILED);
+            throw new BadRequestException(Constants.SEARCH_BY_LICENSE_PLATE_FAILED);
         }
 
         EntityCars entityCars = carsEntity.get();
         if (!licensePlate.equalsIgnoreCase(entityCars.getLicensePlate())) {
             log.info(Constants.SEARCH_BY_LICENSE_PLATE_FAILED);
-            throw new PreconditionFailedException(Constants.SEARCH_BY_LICENSE_PLATE_FAILED);
+            throw new BadRequestException(Constants.SEARCH_BY_LICENSE_PLATE_FAILED);
         }
 
         return entityCars;
