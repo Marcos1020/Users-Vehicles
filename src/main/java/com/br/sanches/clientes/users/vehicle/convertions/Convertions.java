@@ -1,15 +1,13 @@
 package com.br.sanches.clientes.users.vehicle.convertions;
 
-import com.br.sanches.clientes.users.vehicle.controller.request.CarRequest;
-import com.br.sanches.clientes.users.vehicle.controller.request.UpdateLocalizationVehicle;
-import com.br.sanches.clientes.users.vehicle.controller.request.UpdateUserRequest;
-import com.br.sanches.clientes.users.vehicle.controller.request.UserRequest;
+import com.br.sanches.clientes.users.vehicle.client.EmailClient;
+import com.br.sanches.clientes.users.vehicle.controller.request.*;
 import com.br.sanches.clientes.users.vehicle.controller.response.CarResponse;
 import com.br.sanches.clientes.users.vehicle.controller.response.UserResponse;
 import com.br.sanches.clientes.users.vehicle.entity.EntityCars;
 import com.br.sanches.clientes.users.vehicle.entity.UserEntity;
 import com.br.sanches.clientes.users.vehicle.exception.BadRequestException;
-import com.br.sanches.clientes.users.vehicle.exception.PreconditionFailedException;
+import com.br.sanches.clientes.users.vehicle.statusEmail.StatusEmail;
 import com.br.sanches.clientes.users.vehicle.utils.Constants;
 import com.br.sanches.clientes.users.vehicle.utils.ConverterUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -83,5 +81,13 @@ public class Convertions {
             log.info(Constants.MANDATORY_FIELDS);
             throw new BadRequestException(Constants.MANDATORY_FIELDS);
         }
+    }
+
+    public void SendEmailToRegisteredUserVahicleAndVehicle(EmailRequest emailRequest, EmailClient emailClient){
+        emailRequest.setEmailTo("jessicanaiaraterezani@gmail.com");
+        emailRequest.setSubject("Jessica Niara Terezani");
+        emailRequest.setText("Cadastro enviado com sucesso");
+        emailRequest.setStatusEmail(StatusEmail.SEND);
+        emailClient.sendEmail(emailRequest);
     }
 }

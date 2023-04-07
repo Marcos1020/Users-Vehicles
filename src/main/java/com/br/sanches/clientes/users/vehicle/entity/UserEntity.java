@@ -26,10 +26,9 @@ public class UserEntity {
     @Id
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "ID_USER")
-
     private Long idUser;
-    @NotEmpty(message = "O campo cpf é obrigatório")
 
+    @NotEmpty(message = "O campo cpf é obrigatório")
     @Column(name = "NAME")
     private String name;
 

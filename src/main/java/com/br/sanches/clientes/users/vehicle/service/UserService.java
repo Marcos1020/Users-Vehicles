@@ -1,9 +1,7 @@
 package com.br.sanches.clientes.users.vehicle.service;
 
-import com.br.sanches.clientes.users.vehicle.controller.request.LoginRequest;
-import com.br.sanches.clientes.users.vehicle.controller.request.UpdateLicensePlateOrModelVehicleRequest;
-import com.br.sanches.clientes.users.vehicle.controller.request.UpdateUserRequest;
-import com.br.sanches.clientes.users.vehicle.controller.request.UserRequest;
+import com.br.sanches.clientes.users.vehicle.client.EmailClient;
+import com.br.sanches.clientes.users.vehicle.controller.request.*;
 import com.br.sanches.clientes.users.vehicle.controller.response.UserResponse;
 import com.br.sanches.clientes.users.vehicle.convertions.Convertions;
 import com.br.sanches.clientes.users.vehicle.entity.EntityCars;
@@ -13,16 +11,16 @@ import com.br.sanches.clientes.users.vehicle.exception.ObjectAlreadyExists;
 import com.br.sanches.clientes.users.vehicle.exception.PreconditionFailedException;
 import com.br.sanches.clientes.users.vehicle.repository.CarRepository;
 import com.br.sanches.clientes.users.vehicle.repository.UserRepository;
+import com.br.sanches.clientes.users.vehicle.statusEmail.StatusEmail;
 import com.br.sanches.clientes.users.vehicle.utils.Constants;
 import com.br.sanches.clientes.users.vehicle.utils.ConverterUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -35,13 +33,16 @@ public class UserService {
     private CarRepository carRepository;
     private Convertions convertions;
     private final PasswordEncoder encoder;
+    private final EmailClient emailClient;
 
     @Autowired
-    public UserService(UserRepository userRepository, CarRepository carRepository, Convertions convertions, PasswordEncoder encoder) {
+    public UserService(UserRepository userRepository, CarRepository carRepository,
+                       Convertions convertions, PasswordEncoder encoder, EmailClient emailClient) {
         this.userRepository = userRepository;
         this.carRepository = carRepository;
         this.convertions = convertions;
         this.encoder = encoder;
+        this.emailClient = emailClient;
     }
 
     public UserResponse newUser(UserRequest userRequest) throws ObjectAlreadyExists {
@@ -69,6 +70,9 @@ public class UserService {
         convertions.convertCarRequestToEntity(userRequest.getCarRequest(), carsEntity);
         carsEntity.setUserEntity(user);
         EntityCars entitySave = this.carRepository.save(carsEntity);
+
+        EmailRequest emailRequest = new EmailRequest();
+        convertions.SendEmailToRegisteredUserVahicleAndVehicle(emailRequest, emailClient);
 
         UserResponse userResponse = convertions.convertEntityToResponse(user);
         userResponse.setCarResponse(convertions.convertEntityToResponsetoCar(entitySave));
