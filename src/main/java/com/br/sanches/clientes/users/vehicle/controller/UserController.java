@@ -37,13 +37,9 @@ public class UserController {
     @Operation(description = Constants.REGISTER_NEW_USER_AND_BEHICLE)
     public ResponseEntity<?> RegisterNewUser(
             @Valid @RequestBody UserRequest userRequest) throws ObjectAlreadyExists {
-        try {
-            final UserResponse response = this.userService.newUser(userRequest);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
 
-        } catch (ObjectAlreadyExists exists) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(exists.getMessage());
-        }
+        final UserResponse response = this.userService.newUser(userRequest);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping(BasePath.BASE_PARAM_NAME)
@@ -53,13 +49,10 @@ public class UserController {
                     name = "name",
                     required = true,
                     value = "name") final String name) throws PreconditionFailedException {
-        try {
-            final UserResponse response = this.userService.searchByName(name);
-            return new ResponseEntity<>(response, HttpStatus.OK);
 
-        } catch (PreconditionFailedException exception) {
-            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(exception.getMessage());
-        }
+        final UserResponse response = this.userService.searchByName(name);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 
     @PutMapping(BasePath.BASE_PATH_ID_UPDATE)
@@ -67,39 +60,30 @@ public class UserController {
     public ResponseEntity<?> updateUserAndCar(
             @PathVariable("id") Long idUser,
             @RequestBody UpdateUserRequest userRequest) throws BadRequestException {
-        try {
-            final UserResponse response = this.userService.updateUserAndCar(idUser, userRequest);
-            return new ResponseEntity<>(response, HttpStatus.OK);
 
-        } catch (PreconditionFailedException exception) {
-            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(exception.getMessage());
-        }
+        final UserResponse response = this.userService.updateUserAndCar(idUser, userRequest);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 
     @DeleteMapping(BasePath.BASE_PATH_ID_DELETE)
     @Operation(description = Constants.DELETE_USER_AND_VEHICLE_BY_IDUSER)
     public ResponseEntity<?> deletUser(
             @PathVariable("id") Long idUser) throws PreconditionFailedException {
-        try {
-            this.userService.delete(idUser);
-            return ResponseEntity.status(HttpStatus.OK).body(Constants.USER_DELECTED);
 
-        } catch (PreconditionFailedException exception) {
-            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(exception.getMessage());
-        }
+        this.userService.delete(idUser);
+        return ResponseEntity.status(HttpStatus.OK).body(Constants.USER_DELECTED);
+
     }
 
     @PostMapping(BasePath.BASE_PATH_LOGIN_USER)
     @Operation(description = Constants.INITIALIZER_LOGIN_USER)
     public ResponseEntity<?> UserLogin(
             @RequestBody LoginRequest loginRequest) throws BadRequestException {
-        try {
-            this.userService.userLogin(loginRequest);
-            return ResponseEntity.status(HttpStatus.OK).body(Constants.LOGIN_SUCCESSES);
 
-        } catch (BadRequestException exception) {
-            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(exception.getMessage());
-        }
+        this.userService.userLogin(loginRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(Constants.LOGIN_SUCCESSES);
+
     }
 
     @GetMapping(BasePath.BASE_PARAM_SEARCH_LICENSE_PLATE)
@@ -109,13 +93,10 @@ public class UserController {
                     name = "licensePlate",
                     required = true,
                     value = "licensePlate") String licensePlate) throws BadRequestException {
-        try {
-            EntityCars car = userService.searchByLicensePlate(licensePlate);
-            return ResponseEntity.ok(car);
 
-        } catch (BadRequestException exception) {
-            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(exception.getMessage());
-        }
+        EntityCars car = userService.searchByLicensePlate(licensePlate);
+        return ResponseEntity.ok(car);
+
     }
 
     @PatchMapping(BasePath.BASE_PATH_ALTER_LICENSE_PLATE)
@@ -126,13 +107,9 @@ public class UserController {
                     required = true,
                     value = "idUser") final Long idUser,
             @RequestBody UpdateLicensePlateOrModelVehicleRequest request) throws BadRequestException {
-        try {
-            UserResponse response = this.userService.updateLicensePlate(idUser, request);
-            return new ResponseEntity<>(response, HttpStatus.OK);
 
-        } catch (BadRequestException exception) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
-        }
+        UserResponse response = this.userService.updateLicensePlate(idUser, request);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PatchMapping(BasePath.BASE_PATH_ALTER_VEHICLE_MODEL)
@@ -141,14 +118,10 @@ public class UserController {
             @RequestParam(
                     name = "licensePlate",
                     required = true,
-                    value = "licensePlate")final String licensePlate,
-            @RequestBody UpdateLicensePlateOrModelVehicleRequest request)throws BadRequestException{
-        try {
-            EntityCars response = this.userService.updateVehicleModel(licensePlate, request);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+                    value = "licensePlate") final String licensePlate,
+            @RequestBody UpdateLicensePlateOrModelVehicleRequest request) throws BadRequestException {
 
-        }catch (BadRequestException exception){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
-        }
+        EntityCars response = this.userService.updateVehicleModel(licensePlate, request);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

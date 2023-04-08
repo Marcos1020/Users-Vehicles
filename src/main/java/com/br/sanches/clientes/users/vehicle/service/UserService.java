@@ -64,17 +64,17 @@ public class UserService {
 
         UserEntity user = new UserEntity();
         convertions.convertUserRequestToEntity(userRequest, user);
-        this.userRepository.save(user);
+        UserEntity entityUser = this.userRepository.save(user);
 
         EntityCars carsEntity = new EntityCars();
         convertions.convertCarRequestToEntity(userRequest.getCarRequest(), carsEntity);
-        carsEntity.setUserEntity(user);
+        carsEntity.setUserEntity(entityUser);
         EntityCars entitySave = this.carRepository.save(carsEntity);
 
         EmailRequest emailRequest = new EmailRequest();
         convertions.SendEmailToRegisteredUserVahicleAndVehicle(emailRequest, emailClient);
 
-        UserResponse userResponse = convertions.convertEntityToResponse(user);
+        UserResponse userResponse = convertions.convertEntityToResponse(entityUser);
         userResponse.setCarResponse(convertions.convertEntityToResponsetoCar(entitySave));
 
         return userResponse;
