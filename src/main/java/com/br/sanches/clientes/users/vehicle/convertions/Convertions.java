@@ -27,6 +27,7 @@ public class Convertions {
     }
     public void convertUserRequestToEntity(UserRequest userRequest, UserEntity user) {
         user.setName(userRequest.getName());
+        user.setEmail(userRequest.getEmail());
         user.setCpf(encoder.encode(userRequest.getCpf()));
         user.setUserName(userRequest.getUserName());
         user.setPassword(encoder.encode(userRequest.getPassword()));
@@ -45,6 +46,7 @@ public class Convertions {
         userResponse.setCpf(user.getCpf());
         userResponse.setName(user.getName());
         userResponse.setUserName(user.getUserName());
+        userResponse.setEmail(user.getEmail());
         userResponse.setPassword(user.getPassword());
         userResponse.setDateRegister(user.getDateRegister());
         userResponse.setDateUpdate(user.getDateUpdate());
@@ -83,10 +85,9 @@ public class Convertions {
         }
     }
 
-    public void SendEmailToRegisteredUserVahicleAndVehicle(EmailRequest emailRequest, EmailClient emailClient){
-        emailRequest.setEmailTo("jessicanaiaraterezani@gmail.com");
-        emailRequest.setSubject("Jessica Niara Terezani");
-        emailRequest.setText("Cadastro enviado com sucesso");
+    public void SendEmailToRegisteredUserVahicleAndVehicle(EmailRequest emailRequest, EmailClient emailClient, UserEntity entityUser){
+        emailRequest.setEmailTo(entityUser.getEmail());
+        emailRequest.setSubject(entityUser.getName());
         emailRequest.setStatusEmail(StatusEmail.SEND);
         emailClient.sendEmail(emailRequest);
     }

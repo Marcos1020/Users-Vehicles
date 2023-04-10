@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,36 +20,36 @@ import java.util.List;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<List<String>> handleConstraintViolationException(ConstraintViolationException ex) {
+    public ResponseEntity<List<String>> handleConstraintViolationException(ConstraintViolationException exception) {
         List<String> errors = new ArrayList<>();
-        for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
+        for (ConstraintViolation<?> violation : exception.getConstraintViolations()) {
             errors.add(violation.getMessage());
         }
         return ResponseEntity.badRequest().body(errors);
     }
 
     @ExceptionHandler(PreconditionFailedException.class)
-    public ResponseEntity<String> handlePreconditionFailedException(PreconditionFailedException ex) {
-        return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(ex.getMessage());
+    public ResponseEntity<String> handlePreconditionFailedException(PreconditionFailedException exception) {
+        return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(exception.getMessage());
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<String> handleBadRequestException(BadRequestException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    public ResponseEntity<String> handleBadRequestException(BadRequestException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
     }
 
     @ExceptionHandler(ObjectAlreadyExists.class)
-    public ResponseEntity<String> handleObjectAlreadyExists(ObjectAlreadyExists ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    public ResponseEntity<String> handleObjectAlreadyExists(ObjectAlreadyExists exception) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(exception.getMessage());
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<String> handleNotFoundException(NotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    public ResponseEntity<String> handleNotFoundException(NotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
     }
 
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<String> handleIOException(IOException exception) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.getMessage());
+    }
 }
-
-
-
-

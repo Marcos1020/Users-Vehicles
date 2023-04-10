@@ -1,6 +1,7 @@
 create table USERS_TB(
 ID_USER bigint(50) NOT NULL AUTO_INCREMENT,
 NAME   varchar(60) NOT NULL,
+EMAIL varchar(60) NOT NULL,
 USER_NAME varchar(60) NOT NULL,
 PASSWORD varchar(100) NOT NULL,
 CPF    varchar(100) NOT NULL,

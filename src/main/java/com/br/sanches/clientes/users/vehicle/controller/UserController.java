@@ -52,28 +52,28 @@ public class UserController {
 
         final UserResponse response = this.userService.searchByName(name);
         return new ResponseEntity<>(response, HttpStatus.OK);
-
     }
 
     @PutMapping(BasePath.BASE_PATH_ID_UPDATE)
     @Operation(description = Constants.UPDATE_A_USER_AND_A_VEHICLES_LOCATION_DATA)
     public ResponseEntity<?> updateUserAndCar(
-            @PathVariable("id") Long idUser,
+            @RequestParam(
+                    name = "idUser",
+                    required = true,
+                    value = "idUser") final Long idUser,
             @RequestBody UpdateUserRequest userRequest) throws BadRequestException {
 
         final UserResponse response = this.userService.updateUserAndCar(idUser, userRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
-
     }
 
     @DeleteMapping(BasePath.BASE_PATH_ID_DELETE)
     @Operation(description = Constants.DELETE_USER_AND_VEHICLE_BY_IDUSER)
     public ResponseEntity<?> deletUser(
-            @PathVariable("id") Long idUser) throws PreconditionFailedException {
+            @PathVariable("{id}") final Long idUser) throws PreconditionFailedException {
 
         this.userService.delete(idUser);
         return ResponseEntity.status(HttpStatus.OK).body(Constants.USER_DELECTED);
-
     }
 
     @PostMapping(BasePath.BASE_PATH_LOGIN_USER)
@@ -83,7 +83,6 @@ public class UserController {
 
         this.userService.userLogin(loginRequest);
         return ResponseEntity.status(HttpStatus.OK).body(Constants.LOGIN_SUCCESSES);
-
     }
 
     @GetMapping(BasePath.BASE_PARAM_SEARCH_LICENSE_PLATE)
@@ -96,7 +95,6 @@ public class UserController {
 
         EntityCars car = userService.searchByLicensePlate(licensePlate);
         return ResponseEntity.ok(car);
-
     }
 
     @PatchMapping(BasePath.BASE_PATH_ALTER_LICENSE_PLATE)

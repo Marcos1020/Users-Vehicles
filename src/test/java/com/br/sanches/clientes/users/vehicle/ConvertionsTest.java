@@ -24,6 +24,7 @@ public class ConvertionsTest {
     public static UserRequest instantiatingANewUserAndVehicleForTheTest() {
         UserRequest userRequest = new UserRequest();
         userRequest.setUserName("Markin_Dev10");
+        userRequest.setEmail("jessicanaiaraTerezani@gmail.com");
         userRequest.setName("Marcos Vinicius Campos");
         userRequest.setCpf("93610007864");
         userRequest.setPassword("Br12-Je11-Rb87");

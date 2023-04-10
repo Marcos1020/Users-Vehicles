@@ -22,6 +22,8 @@ public class UserRequest {
 
     private String name;
 
+    private String email;
+
     private String cpf;
 
     private String userName;
@@ -29,5 +31,7 @@ public class UserRequest {
     private String password;
 
     private CarRequest carRequest;
+
+    private EmailRequest emailRequest;
 
 }

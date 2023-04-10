@@ -128,7 +128,8 @@ class ApplicationTests {
         UserRequest userRequest = convertionsTest.updateUserAndCarTest();
         String jsonRequest = objectMapper.writeValueAsString(userRequest);
 
-        MvcResult result = mockMvc.perform(put("/clientes/users/altera-os-dados/1")
+        MvcResult result = mockMvc.perform(put("/clientes/users/altera-os-dados")
+                        .param("idUser", "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
                 .andExpect(status().isOk())

@@ -1,7 +1,10 @@
 package com.br.sanches.clientes.users.vehicle.service;
 
 import com.br.sanches.clientes.users.vehicle.client.EmailClient;
-import com.br.sanches.clientes.users.vehicle.controller.request.*;
+import com.br.sanches.clientes.users.vehicle.controller.request.LoginRequest;
+import com.br.sanches.clientes.users.vehicle.controller.request.UpdateLicensePlateOrModelVehicleRequest;
+import com.br.sanches.clientes.users.vehicle.controller.request.UpdateUserRequest;
+import com.br.sanches.clientes.users.vehicle.controller.request.UserRequest;
 import com.br.sanches.clientes.users.vehicle.controller.response.UserResponse;
 import com.br.sanches.clientes.users.vehicle.convertions.Convertions;
 import com.br.sanches.clientes.users.vehicle.entity.EntityCars;
@@ -11,12 +14,10 @@ import com.br.sanches.clientes.users.vehicle.exception.ObjectAlreadyExists;
 import com.br.sanches.clientes.users.vehicle.exception.PreconditionFailedException;
 import com.br.sanches.clientes.users.vehicle.repository.CarRepository;
 import com.br.sanches.clientes.users.vehicle.repository.UserRepository;
-import com.br.sanches.clientes.users.vehicle.statusEmail.StatusEmail;
 import com.br.sanches.clientes.users.vehicle.utils.Constants;
 import com.br.sanches.clientes.users.vehicle.utils.ConverterUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -71,8 +72,7 @@ public class UserService {
         carsEntity.setUserEntity(entityUser);
         EntityCars entitySave = this.carRepository.save(carsEntity);
 
-        EmailRequest emailRequest = new EmailRequest();
-        convertions.SendEmailToRegisteredUserVahicleAndVehicle(emailRequest, emailClient);
+        convertions.SendEmailToRegisteredUserVahicleAndVehicle(userRequest.getEmailRequest(), emailClient, entityUser);
 
         UserResponse userResponse = convertions.convertEntityToResponse(entityUser);
         userResponse.setCarResponse(convertions.convertEntityToResponsetoCar(entitySave));

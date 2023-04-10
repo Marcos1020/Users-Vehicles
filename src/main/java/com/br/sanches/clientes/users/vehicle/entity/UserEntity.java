@@ -36,6 +36,9 @@ public class UserEntity {
     @Column(name = "USER_NAME")
     private String userName;
 
+    @Column(name = "Email")
+    private String email;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "PASSWORD")
     private String password;
