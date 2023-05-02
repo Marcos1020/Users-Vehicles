@@ -41,7 +41,7 @@ public class Convertions {
         entityCars.setCity(carRequest.getCity());
     }
     public UserResponse convertEntityToResponse(UserEntity user) {
-        UserResponse userResponse = new UserResponse();
+        UserResponse userResponse = UserResponse.builder().build();
         userResponse.setIdUser(user.getIdUser());
         userResponse.setCpf(user.getCpf());
         userResponse.setName(user.getName());
@@ -53,7 +53,7 @@ public class Convertions {
         return userResponse;
     }
     public CarResponse convertEntityToResponsetoCar(EntityCars cars) {
-        CarResponse carResponse = new CarResponse();
+        CarResponse carResponse = CarResponse.builder().build();
         carResponse.setIdCar(cars.getIdCar());
         carResponse.setLicensePlate(cars.getLicensePlate().toUpperCase());
         carResponse.setVehicleModel(cars.getVehicleModel().toUpperCase());
