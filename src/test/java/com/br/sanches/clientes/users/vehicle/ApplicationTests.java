@@ -82,7 +82,7 @@ class ApplicationTests {
         UserRequest userRequest = ConvertionsTest.instantiatingANewUserAndVehicleForTheTest();
         String jsonRequest = objectMapper.writeValueAsString(userRequest);
 
-        MvcResult mvcResult = mockMvc.perform(post("/clientes/users/register")
+        MvcResult mvcResult = mockMvc.perform(post("v1/api/clientes/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
                 .andExpect(status().isCreated())
@@ -96,15 +96,19 @@ class ApplicationTests {
                 .isEqualTo(userRequest.getCarRequest().getLicensePlate().toUpperCase());
         assertThat(userResponse.getCarResponse().getVehicleModel())
                 .isEqualTo(userRequest.getCarRequest().getVehicleModel().toUpperCase());
-        assertThat(userResponse.getCarResponse().getCountry()).isEqualTo(userRequest.getCarRequest().getCountry());
-        assertThat(userResponse.getCarResponse().getState()).isEqualTo(userRequest.getCarRequest().getState());
-        assertThat(userResponse.getCarResponse().getCity()).isEqualTo(userRequest.getCarRequest().getCity());
+        assertThat(userResponse.getCarResponse().getCountry())
+                .isEqualTo(userRequest.getCarRequest().getCountry());
+        assertThat(userResponse.getCarResponse().getState())
+                .isEqualTo(userRequest.getCarRequest().getState());
+        assertThat(userResponse.getCarResponse().getCity())
+                .isEqualTo(userRequest.getCarRequest().getCity());
+        assertThat(userResponse.getEmail()).isEqualTo(userRequest.getEmail());
     }
 
     @Test
     public void shouldSearchbyName() throws Exception {
 
-        MvcResult result = mockMvc.perform(get("/clientes/users/search")
+        MvcResult result = mockMvc.perform(get("v1/api/clientes/users/search")
                         .param("name", "Marcos Vinicius Campos"))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -128,7 +132,7 @@ class ApplicationTests {
         UserRequest userRequest = convertionsTest.updateUserAndCarTest();
         String jsonRequest = objectMapper.writeValueAsString(userRequest);
 
-        MvcResult result = mockMvc.perform(put("/clientes/users/altera-os-dados")
+        MvcResult result = mockMvc.perform(put("v1/api/clientes/users/altera-os-dados")
                         .param("idUser", "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
@@ -159,7 +163,7 @@ class ApplicationTests {
 
         carRepository.save(entityCars);
 
-        mockMvc.perform(delete("/clientes/users/deletar/1", userEntity.getIdUser()))
+        mockMvc.perform(delete("v1/api/clientes/users/deletar/1", userEntity.getIdUser()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(Constants.USER_DELECTED));
 
@@ -176,7 +180,7 @@ class ApplicationTests {
         loginRequest.setUserName(user.get().getUserName());
         loginRequest.setPassword("Br12-Je11-Rb87");
 
-        MvcResult mvcResult = mockMvc.perform(post("/clientes/users/register")
+        MvcResult mvcResult = mockMvc.perform(post("v1/api/clientes/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
@@ -189,7 +193,8 @@ class ApplicationTests {
     @Test
     public void sholdReturnCarDataByYourLicensePlate() throws Exception {
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/clientes/users/search/license-plate")
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(
+                "v1/api/clientes/users/search/license-plate")
                         .param("licensePlate", "OLK1234"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
@@ -212,7 +217,7 @@ class ApplicationTests {
         UpdateLicensePlateOrModelVehicleRequest userRequest = convertionsTest.changeTheLicensePlateOfAVehicle();
         String jsonRequest = objectMapper.writeValueAsString(userRequest);
 
-        MvcResult mvcResult = mockMvc.perform(patch("/clientes/users/alter/license-plate")
+        MvcResult mvcResult = mockMvc.perform(patch("v1/api/clientes/users/alter/license-plate")
                         .param("idUser", "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
@@ -232,7 +237,7 @@ class ApplicationTests {
         UpdateLicensePlateOrModelVehicleRequest updateRequest = convertionsTest.changesTheModelOfAVehicleOfAVehicle();
         String jsonRequest = objectMapper.writeValueAsString(updateRequest);
 
-        MvcResult mvcResult = mockMvc.perform(patch("clientes/users/alter/vehicle-model")
+        MvcResult mvcResult = mockMvc.perform(patch("v1/api/clientes/users/alter/vehicle-model")
                         .param("licensePlate", "EFL0824")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
