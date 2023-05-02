@@ -28,10 +28,10 @@ public class SwaggerConfig {
                 .build()
                 .tags(new Tag("Clientes", Constants.SWAGGER_CLIENTS_DESCRIPTION),
                         new Tag("Veículos", Constants.SWAGGER_VEHICLES_DESCRIPTION))
-                .apiInfo(apiInfo());
+                .apiInfo(apiInformation());
     }
 
-    private ApiInfo apiInfo() {
+    private ApiInfo apiInformation() {
         return new ApiInfoBuilder()
                 .title(Constants.SWAGGER_TITLE_API)
                 .description(Constants.SWAGGER_DESCRIPTION_API)
