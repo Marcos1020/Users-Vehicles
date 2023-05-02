@@ -63,11 +63,11 @@ public class UserService {
             }
         }
 
-        UserEntity user = new UserEntity();
+        UserEntity user = UserEntity.builder().build();
         convertions.convertUserRequestToEntity(userRequest, user);
         UserEntity entityUser = this.userRepository.save(user);
 
-        EntityCars carsEntity = new EntityCars();
+        EntityCars carsEntity = EntityCars.builder().build();
         convertions.convertCarRequestToEntity(userRequest.getCarRequest(), carsEntity);
         carsEntity.setUserEntity(entityUser);
         EntityCars entitySave = this.carRepository.save(carsEntity);
