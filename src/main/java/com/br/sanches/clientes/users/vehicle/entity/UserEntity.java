@@ -1,10 +1,6 @@
 package com.br.sanches.clientes.users.vehicle.entity;
 
-import com.br.sanches.clientes.users.vehicle.utils.ConverterUtil;
-import com.br.sanches.clientes.users.vehicle.utils.DateAndTimeDeserializer;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -50,15 +46,9 @@ public class UserEntity {
     @Column(name = "CPF")
     private String cpf;
 
-    @JsonDeserialize(using = DateAndTimeDeserializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ConverterUtil.FORMATO_DATA)
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_REGISTER")
-    private Date dateRegister;
+    private LocalDate dateRegister;
 
-    @JsonDeserialize(using = DateAndTimeDeserializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ConverterUtil.FORMATO_DATA)
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DT_UPDATE")
-    private Date dateUpdate;
+    private LocalDate dateUpdate;
 }
