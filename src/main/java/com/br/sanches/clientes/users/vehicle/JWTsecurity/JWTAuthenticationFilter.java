@@ -6,6 +6,7 @@ import com.br.sanches.clientes.users.vehicle.entity.UserEntity;
 import com.br.sanches.clientes.users.vehicle.utils.Constants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,8 +23,11 @@ import java.util.Date;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    public static final int TOKEN_EXPERATION = 600_00;
-    public static final String TOKEN_PASSWORD = "c5b9c3de-8930-43e5-b6ef-1dccfda1b8f0";
+    @Value("${token-experation}")
+    static int TOKEN_EXPIRATION;
+
+    @Value("${token-password}")
+    static String TOKEN_PASSWORD;
 
     private final AuthenticationManager authenticationManager;
 
@@ -58,7 +62,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String token = JWT.create()
                 .withSubject(userDatils.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + TOKEN_EXPERATION))
+                .withExpiresAt(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION))
                 .sign(Algorithm.HMAC512(TOKEN_PASSWORD));
 
         response.getWriter().write(token);
