@@ -14,19 +14,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.Charset;
 import java.util.Optional;
 
@@ -44,30 +41,36 @@ import static org.testng.AssertJUnit.assertNotNull;
 @Slf4j
 class ApplicationTests {
 
-    private TestRestTemplate restTemplate;
+    @Value("${generator-new-user.url}")
+    private String generateNewUser;
+    @Value("${should-search-by-name.url}")
+    private String searchUserByName;
+    @Value("${shold-update-user-and-car.url}")
+    private String updateUserAndVehicle;
+    @Value("${should-delete-a-user-and-vehicle-by-its-id.url}")
+    private String deleteUserAndVehicle;
+    @Value("${shold-return-ok-user-login.url}")
+    private String loginUser;
+    @Value("${shold-return-car-data-by-your-license-plate.url}")
+    private String searchByLicensePlate;
+    @Value("must-change-the-license-plate-of-a-vehicle-that-was-registered-wrong.url")
+    private String updateVehicles;
+    @Value("${must-change-the-model-of-a-vehicle-that-was-registered-incorrectly.url}")
+    private String updateLicesnsePlate;
     private UserRepository userRepository;
     private CarRepository carRepository;
     private ConvertionsTest convertionsTest;
-    private PasswordEncoder passwordEncoder;
-    private final PasswordEncoder encoder;
-    private HttpServletRequest request;
     private MockMvc mockMvc;
     private ObjectMapper objectMapper;
 
 
     @Autowired
-    ApplicationTests(TestRestTemplate restTemplate,
-                     UserRepository userRepository,
+    ApplicationTests(UserRepository userRepository,
                      CarRepository carRepository, ConvertionsTest convertionsTest,
-                     PasswordEncoder passwordEncoder,
-                     PasswordEncoder encoder, HttpServletRequest request, MockMvc mockMvc, ObjectMapper objectMapper) {
-        this.restTemplate = restTemplate;
+                     MockMvc mockMvc, ObjectMapper objectMapper) {
         this.userRepository = userRepository;
         this.carRepository = carRepository;
         this.convertionsTest = convertionsTest;
-        this.passwordEncoder = passwordEncoder;
-        this.encoder = encoder;
-        this.request = request;
         this.mockMvc = mockMvc;
         this.objectMapper = objectMapper;
     }
@@ -82,7 +85,7 @@ class ApplicationTests {
         UserRequest userRequest = ConvertionsTest.instantiatingANewUserAndVehicleForTheTest();
         String jsonRequest = objectMapper.writeValueAsString(userRequest);
 
-        MvcResult mvcResult = mockMvc.perform(post("v1/api/clientes/users/register")
+        MvcResult mvcResult = mockMvc.perform(post(generateNewUser)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
                 .andExpect(status().isCreated())
@@ -108,7 +111,7 @@ class ApplicationTests {
     @Test
     public void shouldSearchbyName() throws Exception {
 
-        MvcResult result = mockMvc.perform(get("v1/api/clientes/users/search")
+        MvcResult result = mockMvc.perform(get(searchUserByName)
                         .param("name", "Marcos Vinicius Campos"))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -132,7 +135,7 @@ class ApplicationTests {
         UserRequest userRequest = convertionsTest.updateUserAndCarTest();
         String jsonRequest = objectMapper.writeValueAsString(userRequest);
 
-        MvcResult result = mockMvc.perform(put("v1/api/clientes/users/altera-os-dados")
+        MvcResult result = mockMvc.perform(put(updateUserAndVehicle)
                         .param("idUser", "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
@@ -163,7 +166,7 @@ class ApplicationTests {
 
         carRepository.save(entityCars);
 
-        mockMvc.perform(delete("v1/api/clientes/users/deletar/1", userEntity.getIdUser()))
+        mockMvc.perform(delete(deleteUserAndVehicle, userEntity.getIdUser()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(Constants.USER_DELECTED));
 
@@ -180,7 +183,7 @@ class ApplicationTests {
         loginRequest.setUserName(user.get().getUserName());
         loginRequest.setPassword("Br12-Je11-Rb87");
 
-        MvcResult mvcResult = mockMvc.perform(post("v1/api/clientes/users/register")
+        MvcResult mvcResult = mockMvc.perform(post(loginUser)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
@@ -193,8 +196,7 @@ class ApplicationTests {
     @Test
     public void sholdReturnCarDataByYourLicensePlate() throws Exception {
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(
-                "v1/api/clientes/users/search/license-plate")
+        MvcResult mvcResult = mockMvc.perform(get(searchByLicensePlate)
                         .param("licensePlate", "OLK1234"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
@@ -217,7 +219,7 @@ class ApplicationTests {
         UpdateLicensePlateOrModelVehicleRequest userRequest = convertionsTest.changeTheLicensePlateOfAVehicle();
         String jsonRequest = objectMapper.writeValueAsString(userRequest);
 
-        MvcResult mvcResult = mockMvc.perform(patch("v1/api/clientes/users/alter/license-plate")
+        MvcResult mvcResult = mockMvc.perform(patch(updateVehicles)
                         .param("idUser", "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
@@ -237,7 +239,7 @@ class ApplicationTests {
         UpdateLicensePlateOrModelVehicleRequest updateRequest = convertionsTest.changesTheModelOfAVehicleOfAVehicle();
         String jsonRequest = objectMapper.writeValueAsString(updateRequest);
 
-        MvcResult mvcResult = mockMvc.perform(patch("v1/api/clientes/users/alter/vehicle-model")
+        MvcResult mvcResult = mockMvc.perform(patch(updateLicesnsePlate)
                         .param("licensePlate", "EFL0824")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
