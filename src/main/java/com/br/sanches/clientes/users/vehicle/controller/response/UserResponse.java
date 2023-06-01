@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Builder
@@ -34,13 +35,9 @@ public class UserResponse {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    @JsonDeserialize(using = DateAndTimeDeserializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ConverterUtil.FORMATO_DATA)
-    private Date dateRegister;
+    private LocalDate dateRegister;
 
-    @JsonDeserialize(using = DateAndTimeDeserializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ConverterUtil.FORMATO_DATA)
-    private Date dateUpdate;
+    private LocalDate dateUpdate;
 
     private CarResponse carResponse;
 }
