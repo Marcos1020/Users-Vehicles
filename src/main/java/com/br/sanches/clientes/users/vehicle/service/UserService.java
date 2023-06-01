@@ -15,13 +15,13 @@ import com.br.sanches.clientes.users.vehicle.exception.PreconditionFailedExcepti
 import com.br.sanches.clientes.users.vehicle.repository.CarRepository;
 import com.br.sanches.clientes.users.vehicle.repository.UserRepository;
 import com.br.sanches.clientes.users.vehicle.utils.Constants;
-import com.br.sanches.clientes.users.vehicle.utils.ConverterUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -193,7 +193,7 @@ public class UserService {
         }
         try {
             entityCars.setLicensePlate(request.getLicensePlate().toUpperCase());
-            entityCars.setDateUpdate(ConverterUtil.nowTime());
+            entityCars.setDateUpdate(LocalDate.now());
 
         } catch (BadRequestException exception) {
             log.info(Constants.MANDATORY_FIELDS);
@@ -222,7 +222,7 @@ public class UserService {
 
         try {
             entityCars.get().setVehicleModel(request.getVehicleModel().toUpperCase());
-            entityCars.get().setDateUpdate(ConverterUtil.nowTime());
+            entityCars.get().setDateUpdate(LocalDate.now());
 
         } catch (BadRequestException exception) {
             log.info(Constants.MANDATORY_FIELDS);
