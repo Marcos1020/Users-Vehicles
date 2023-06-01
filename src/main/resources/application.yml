@@ -35,7 +35,29 @@ feign:
       email-client:
         url: http://localhost:9090
 
+generator-new-user:
+  url: "v1/api/clientes/users/register"
+
+should-search-by-name:
+  url: "v1/api/clientes/users/search"
+
+shold-update-user-and-car:
+  url: "v1/api/clientes/users/altera-os-dados"
+
+should-delete-a-user-and-vehicle-by-its-id:
+  url: "v1/api/clientes/users/deletar/1"
+
+shold-return-ok-user-login:
+  url: "v1/api/clientes/users/login-user"
+
+shold-return-car-data-by-your-license-plate:
+  url: "v1/api/clientes/users/search/license-plate"
+
+must-change-the-license-plate-of-a-vehicle-that-was-registered-wrong:
+  url: "v1/api/clientes/users/alter/license-plate"
+
+must-change-the-model-of-a-vehicle-that-was-registered-incorrectly:
+  url: "v1/api/clientes/users/alter/vehicle-model"
+
 token-experation: 600_00
-token_password:  c5b9c3de-8930-43e5-b6ef-1dccfda1b8f0
-
-
+token-password:  c5b9c3de-8930-43e5-b6ef-1dccfda1b8f0
