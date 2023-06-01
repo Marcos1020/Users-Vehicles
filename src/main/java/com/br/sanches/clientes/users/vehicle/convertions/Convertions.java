@@ -9,11 +9,12 @@ import com.br.sanches.clientes.users.vehicle.entity.UserEntity;
 import com.br.sanches.clientes.users.vehicle.exception.BadRequestException;
 import com.br.sanches.clientes.users.vehicle.statusEmail.StatusEmail;
 import com.br.sanches.clientes.users.vehicle.utils.Constants;
-import com.br.sanches.clientes.users.vehicle.utils.ConverterUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.time.LocalDate;
 
 @Configuration
 @Slf4j
@@ -31,7 +32,7 @@ public class Convertions {
         user.setCpf(encoder.encode(userRequest.getCpf()));
         user.setUserName(userRequest.getUserName());
         user.setPassword(encoder.encode(userRequest.getPassword()));
-        user.setDateRegister(ConverterUtil.nowTime());
+        user.setDateRegister(LocalDate.now());
     }
     public static void convertCarRequestToEntity(CarRequest carRequest, EntityCars entityCars) {
         entityCars.setLicensePlate(carRequest.getLicensePlate().toUpperCase());
@@ -78,7 +79,7 @@ public class Convertions {
             user.setCpf(encoder.encode(updateUserRequest.getCpf()));
             user.setUserName(updateUserRequest.getUserName());
             user.setPassword(encoder.encode(updateUserRequest.getPassword()));
-            user.setDateUpdate(ConverterUtil.nowTime());
+            user.setDateUpdate(LocalDate.now());
         }catch (BadRequestException exception){
             log.info(Constants.MANDATORY_FIELDS);
             throw new BadRequestException(Constants.MANDATORY_FIELDS);
