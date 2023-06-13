@@ -19,7 +19,7 @@ import java.time.LocalDate;
 @Table(name = "USERS_TB")
 public class UserEntity {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "ID_USER")

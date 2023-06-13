@@ -20,8 +20,5 @@ public class EmailRequest {
     private String emailTo;
 
     @NotBlank
-    private String subject;
-
-    @NotBlank
     private StatusEmail statusEmail;
 }

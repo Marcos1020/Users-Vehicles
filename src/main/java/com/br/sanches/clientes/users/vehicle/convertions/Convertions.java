@@ -1,6 +1,6 @@
 package com.br.sanches.clientes.users.vehicle.convertions;
 
-import com.br.sanches.clientes.users.vehicle.client.EmailClient;
+import com.br.sanches.clientes.users.vehicle.emailIntegration.EmailIntegration;
 import com.br.sanches.clientes.users.vehicle.controller.request.*;
 import com.br.sanches.clientes.users.vehicle.controller.response.CarResponse;
 import com.br.sanches.clientes.users.vehicle.controller.response.UserResponse;
@@ -86,9 +86,8 @@ public class Convertions {
         }
     }
 
-    public void SendEmailToRegisteredUserVahicleAndVehicle(EmailRequest emailRequest, EmailClient emailClient, UserEntity entityUser){
+    public void SendEmailToRegisteredUserVahicleAndVehicle(EmailRequest emailRequest, EmailIntegration emailClient, UserEntity entityUser){
         emailRequest.setEmailTo(entityUser.getEmail());
-        emailRequest.setSubject(entityUser.getName());
         emailRequest.setStatusEmail(StatusEmail.SEND);
         emailClient.sendEmail(emailRequest);
     }

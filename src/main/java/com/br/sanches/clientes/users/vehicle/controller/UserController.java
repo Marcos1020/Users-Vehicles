@@ -7,6 +7,7 @@ import com.br.sanches.clientes.users.vehicle.controller.request.UpdateUserReques
 import com.br.sanches.clientes.users.vehicle.controller.request.UserRequest;
 import com.br.sanches.clientes.users.vehicle.controller.response.UserResponse;
 import com.br.sanches.clientes.users.vehicle.entity.EntityCars;
+import com.br.sanches.clientes.users.vehicle.entity.UserEntity;
 import com.br.sanches.clientes.users.vehicle.exception.BadRequestException;
 import com.br.sanches.clientes.users.vehicle.exception.ObjectAlreadyExists;
 import com.br.sanches.clientes.users.vehicle.exception.PreconditionFailedException;
@@ -121,5 +122,11 @@ public class UserController {
 
         EntityCars response = this.userService.updateVehicleModel(licensePlate, request);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("list/all/users")
+    public List<UserEntity> listAll()throws BadRequestException{
+
+        return userService.getAllUsers();
     }
 }

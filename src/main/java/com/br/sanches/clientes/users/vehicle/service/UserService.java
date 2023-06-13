@@ -1,6 +1,6 @@
 package com.br.sanches.clientes.users.vehicle.service;
 
-import com.br.sanches.clientes.users.vehicle.client.EmailClient;
+import com.br.sanches.clientes.users.vehicle.emailIntegration.EmailIntegration;
 import com.br.sanches.clientes.users.vehicle.controller.request.LoginRequest;
 import com.br.sanches.clientes.users.vehicle.controller.request.UpdateLicensePlateOrModelVehicleRequest;
 import com.br.sanches.clientes.users.vehicle.controller.request.UpdateUserRequest;
@@ -20,8 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -34,11 +36,11 @@ public class UserService {
     private CarRepository carRepository;
     private Convertions convertions;
     private final PasswordEncoder encoder;
-    private final EmailClient emailClient;
+    private final EmailIntegration emailClient;
 
     @Autowired
     public UserService(UserRepository userRepository, CarRepository carRepository,
-                       Convertions convertions, PasswordEncoder encoder, EmailClient emailClient) {
+                       Convertions convertions, PasswordEncoder encoder, EmailIntegration emailClient) {
         this.userRepository = userRepository;
         this.carRepository = carRepository;
         this.convertions = convertions;
@@ -232,5 +234,16 @@ public class UserService {
         EntityCars carsEntity = this.carRepository.save(entityCars.orElseThrow(()
                 -> new BadRequestException(Constants.INVALID_ENTITY)));
         return carsEntity;
+    }
+
+    public List<UserEntity> getAllUsers()throws BadRequestException{
+
+        List<UserEntity> userEntityList = this.userRepository.findAll();
+
+        if (ObjectUtils.isEmpty(userEntityList)){
+            log.info("Lista de usuarios encontra-se vazia");
+            throw new BadRequestException("Lista de usuarios encontra-se vazia");
+        }
+        return userEntityList;
     }
 }
