@@ -17,6 +17,10 @@ utilizando o padrão de projetos MVC, conceitos de clean code. e as mais variada
   *docker-compose 
   
   *Swagger-documentation
+
+  *JPA
+
+  *Hibernate
   
   *Rest-Assured
   
