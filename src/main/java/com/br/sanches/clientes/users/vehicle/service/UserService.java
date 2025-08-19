@@ -14,7 +14,6 @@ import com.br.sanches.clientes.users.vehicle.utils.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 
@@ -23,7 +22,6 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-@Component
 public class UserService {
 
     private UserRepository userRepository;
@@ -47,7 +45,7 @@ public class UserService {
         if (userEntity.isPresent()) {
             log.info(Constants.USER_NAME_EXISTING);
             throw new ObjectAlreadyExists(Constants.USER_NAME_EXISTING);
-        } else {
+        } else{
             Optional<EntityCars> entityCars = this.carRepository.findByLicensePlate(userRequest.getCarRequest().getLicensePlate());
             if (entityCars.isPresent()) {
                 log.info(Constants.INVALID_LICENSE_PLATE);
@@ -73,12 +71,11 @@ public class UserService {
     public UserResponse searchById(Long idUser) throws PreconditionFailedException {
 
         final UserEntity userEntity = this.userRepository.findById(idUser).orElse(null);
-        final EntityCars entityCars = this.carRepository.findByIdUser(userEntity).orElse(null);
-
         if (Objects.isNull(userEntity)) {
             log.info(Constants.ID_NAO_ENCONTRADO);
             throw new PreconditionFailedException(Constants.ID_NAO_ENCONTRADO);
         }
+        final EntityCars entityCars = this.carRepository.findByIdUser(userEntity).orElse(null);
 
         UserResponse userResponse = convertions.convertEntityToResponse(userEntity);
         userResponse.setCarResponse(convertions.convertEntityToResponsetoCar(entityCars));
@@ -89,9 +86,12 @@ public class UserService {
     public UserResponse updateUserAndCar(final Long idUser, final UserRequest userRequest) throws PreconditionFailedException {
 
         final UserEntity user = this.userRepository.findById(idUser).orElse(null);
+        if (Objects.isNull(user)) {
+            log.info(Constants.ID_NAO_ENCONTRADO);
+            throw new PreconditionFailedException(Constants.ID_NAO_ENCONTRADO);
+        }
         final EntityCars cars = this.carRepository.findByIdUser(user).orElse(null);
-
-        if (Objects.isNull(idUser)) {
+        if (Objects.isNull(cars)) {
             log.info(Constants.ID_NAO_ENCONTRADO);
             throw new PreconditionFailedException(Constants.ID_NAO_ENCONTRADO);
         }
@@ -118,7 +118,7 @@ public class UserService {
         }
 
         Optional<EntityCars> cars = this.carRepository.findByIdUser(userEntity);
-        this.carRepository.deleteById(cars.get().getIdCar());
+        cars.ifPresent(entity -> this.carRepository.deleteById(entity.getIdCar()));
         this.userRepository.delete(userEntity);
     }
 
@@ -128,7 +128,7 @@ public class UserService {
 
         final Optional<UserEntity> userEntity = this.userRepository.findByUserName(loginRequest.getUserName());
 
-        if (Objects.isNull(userEntity)) {
+        if (!userEntity.isPresent()) {
             log.info(Constants.USER_NOT_FOUND);
             throw new PreconditionFailedException(Constants.USER_NOT_FOUND);
         } else {

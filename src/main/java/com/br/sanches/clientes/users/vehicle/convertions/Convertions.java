@@ -7,7 +7,6 @@ import com.br.sanches.clientes.users.vehicle.controller.response.UserResponse;
 import com.br.sanches.clientes.users.vehicle.entity.EntityCars;
 import com.br.sanches.clientes.users.vehicle.entity.UserEntity;
 import com.br.sanches.clientes.users.vehicle.exception.PreconditionFailedException;
-import com.br.sanches.clientes.users.vehicle.service.UserService;
 import com.br.sanches.clientes.users.vehicle.utils.Constants;
 import com.br.sanches.clientes.users.vehicle.utils.ConverterUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +30,7 @@ public class Convertions {
         user.setPassword(encoder.encode(userRequest.getPassword()));
         user.setDateRegister(ConverterUtil.nowTime());
     }
-    public static void convertCarRequestToEntity(CarRequest carRequest, EntityCars entityCars) {
+    public void convertCarRequestToEntity(CarRequest carRequest, EntityCars entityCars) {
         entityCars.setLicensePlate(carRequest.getLicensePlate().toUpperCase());
         entityCars.setVehicleModel(carRequest.getVehicleModel().toUpperCase());
         entityCars.setCountry(carRequest.getCountry());

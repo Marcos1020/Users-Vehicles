@@ -15,6 +15,6 @@ services:
       - mysql_data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: users.vehicle
-      MYSQL_USER: users.vehicle
+      MYSQL_DATABASE: Users_vehicle
+      MYSQL_USER: Users_vehicle
       MYSQL_PASSWORD: root

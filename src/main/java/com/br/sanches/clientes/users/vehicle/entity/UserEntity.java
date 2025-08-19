@@ -3,7 +3,6 @@ package com.br.sanches.clientes.users.vehicle.entity;
 import com.br.sanches.clientes.users.vehicle.utils.ConverterUtil;
 import com.br.sanches.clientes.users.vehicle.utils.DateAndTimeDeserializer;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;

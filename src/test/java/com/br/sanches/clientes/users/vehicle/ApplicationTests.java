@@ -8,6 +8,7 @@ import com.br.sanches.clientes.users.vehicle.entity.UserEntity;
 import com.br.sanches.clientes.users.vehicle.exception.PreconditionFailedException;
 import com.br.sanches.clientes.users.vehicle.repository.CarRepository;
 import com.br.sanches.clientes.users.vehicle.repository.UserRepository;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,18 +44,7 @@ class ApplicationTests {
 	@Test
 	public void testRegisterNewUser() throws PreconditionFailedException {
 
-		UserRequest userRequest = new UserRequest();
-		userRequest.setUserName("Markin_Dev10");
-		userRequest.setName("Marcos Vinicius Campos");
-		userRequest.setCpf("93610007864");
-		userRequest.setPassword("Br12-Je11-Rb87");
-		CarRequest carRequest = new CarRequest();
-		carRequest.setLicensePlate("olk1234");
-		carRequest.setVehicleModel("honda civic lxs");
-		carRequest.setCountry("Brasil");
-		carRequest.setState("São Paulo");
-		carRequest.setCity("Mirassol");
-		userRequest.setCarRequest(carRequest);
+		UserRequest userRequest = SetDataRequestEnter();
 
 		ResponseEntity<UserResponse> response = restTemplate.postForEntity(
 				"http://localhost:9060/clientes/users/register", userRequest, UserResponse.class);
@@ -74,6 +64,23 @@ class ApplicationTests {
 		assertThat(savedUser.isPresent()).isTrue();
 		Optional<EntityCars> savedCar = carRepository.findByLicensePlate(userRequest.getCarRequest().getLicensePlate());
 		assertThat(savedCar.isPresent()).isTrue();
+	}
+
+	@NotNull
+	private static UserRequest SetDataRequestEnter() {
+		UserRequest userRequest = new UserRequest();
+		userRequest.setUserName("Markin_Dev10");
+		userRequest.setName("Marcos Vinicius Campos");
+		userRequest.setCpf("93610007864");
+		userRequest.setPassword("Br12-Je11-Rb87");
+		CarRequest carRequest = new CarRequest();
+		carRequest.setLicensePlate("olk1234");
+		carRequest.setVehicleModel("honda civic lxs");
+		carRequest.setCountry("Brasil");
+		carRequest.setState("São Paulo");
+		carRequest.setCity("Mirassol");
+		userRequest.setCarRequest(carRequest);
+		return userRequest;
 	}
 
 }

@@ -1,10 +1,9 @@
-package com.sanches.consultacep.exception;
+package com.br.sanches.clientes.users.vehicle.exception;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -13,7 +12,6 @@ import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
-@ControllerAdvice
 @RestControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class GlobalExceptionHandler {
@@ -33,5 +31,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<String> handleNotFoundException(NotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+    }
+    @ExceptionHandler(PreconditionFailedException.class)
+    public ResponseEntity<String> handlePreconditionFailedException(PreconditionFailedException preconditionFailedException){
+        return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(preconditionFailedException.getMessage());
+    }
+    @ExceptionHandler(ObjectAlreadyExists.class)
+    public ResponseEntity<String> handleObjectAlreadyExistsException(ObjectAlreadyExists objectAlreadyExistsException){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(objectAlreadyExistsException.getMessage());
     }
 }

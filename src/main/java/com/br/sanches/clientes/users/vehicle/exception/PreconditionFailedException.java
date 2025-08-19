@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class PreconditionFailedException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 	public PreconditionFailedException(String message) {
-		super(message, null, true, false);
+		super(message);
 	}
 }
 
